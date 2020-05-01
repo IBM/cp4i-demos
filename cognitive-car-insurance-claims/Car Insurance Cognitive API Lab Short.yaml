@@ -1,0 +1,411 @@
+$integration: 'http://ibm.com/appconnect/integration/v2/integrationFile'
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        createCarRepairClaim:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: CarRepairClaim
+          output-context:
+            data: CarRepairClaim
+      options:
+        resources:
+          - business-object: CarRepairClaim
+            model:
+              $ref: '#/models/CarRepairClaim'
+            triggers:
+              create: createCarRepairClaim
+      type: api-trigger
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: Case
+      connector-type: salesforce
+      account-name: App Connect Trial
+      actions:
+        CREATE: {}
+    action-interface-2:
+      type: api-action
+      business-object: Attachment
+      connector-type: salesforce
+      account-name: App Connect Trial
+      actions:
+        CREATE: {}
+    action-interface-3:
+      type: api-action
+      business-object: Image
+      connector-type: watsonvr
+      account-name: App Connect Trial
+      actions:
+        CLASSIFYIMAGES: {}
+    action-interface-4:
+      type: api-action
+      business-object: Case
+      connector-type: salesforce
+      account-name: App Connect Trial
+      actions:
+        UPDATEALL: {}
+    action-interface-6:
+      type: api-action
+      business-object: Tone
+      connector-type: watsontoneanalyzer
+      account-name: App Connect Trial
+      actions:
+        GETTONEANALYSIS: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - custom-action:
+              name: IBM Watson Visual Recognition Classify images
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-3'
+              action: CLASSIFYIMAGES
+              map:
+                mappings:
+                  - classifier_id:
+                      template: default
+                  - images_file:
+                      template: '{{$Request.PhotoOfCar}}'
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+          - set-variable:
+              name: Set variable
+              map:
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      imageCar:
+                        type: string
+                      imagePerson:
+                        type: string
+                      classifiersHumanReadable:
+                        type: string
+                      imageRoadster:
+                        type: string
+                mappings:
+                  - variable:
+                      mappings:
+                        - classifiersHumanReadable:
+                            template: >-
+                              {{$join($IBMWatsonVisualRecognitionClassifyimages.classify_images.classifiers.classes.class,
+                              ', ')}}
+                        - imageCar:
+                            template: >-
+                              {{$IBMWatsonVisualRecognitionClassifyimages.classify_images.classifiers.classes[class='car']}}
+                        - imagePerson:
+                            template: >-
+                              {{$IBMWatsonVisualRecognitionClassifyimages.classify_images.classifiers.classes[class='person']}}
+                        - imageRoadster:
+                            template: >-
+                              {{$IBMWatsonVisualRecognitionClassifyimages.classify_images.classifiers.classes[class='roadster']}}
+          - if:
+              name: If
+              input:
+                - variable: Request
+                  $ref: '#/trigger/payload'
+                - variable: IBMWatsonVisualRecognitionClassifyimages
+                  $ref: >-
+                    #/node-output/IBM Watson Visual Recognition Classify
+                    images/response/payload
+                - variable: Setvariable
+                  $ref: '#/node-output/Set variable/response/payload'
+              branch:
+                - condition:
+                    '{{$Setvariable.variable.imageCar}}':
+                      =: ''
+                  execute: []
+                  completion-action:
+                    terminate:
+                      error:
+                        input:
+                          - variable: Request
+                            $ref: '#/trigger/payload'
+                          - variable: IBMWatsonVisualRecognitionClassifyimages
+                            $ref: >-
+                              #/node-output/IBM Watson Visual Recognition
+                              Classify images/response/payload
+                          - variable: Setvariable
+                            $ref: '#/node-output/Set variable/response/payload'
+                        message: 'There is no car in this image, please resubmit'
+                        status-code: 400
+              else:
+                execute: []
+              output-schema: {}
+          - create-action:
+              name: Salesforce Create case
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              map:
+                mappings:
+                  - ContactId:
+                      template: 0033z00002d9jSFAAY
+                  - Description:
+                      template: '{{$Request.DescriptionOfDamage}}'
+                  - EngineeringReqNumber__c:
+                      template: '{{$Request.LicensePlate}}'
+                  - Origin:
+                      template: Web
+                  - Priority:
+                      template: Medium
+                  - Reason:
+                      template: Breakdown
+                  - Status:
+                      template: New
+                  - Subject:
+                      template: 'Car Breakdown - {{$Request.LicensePlate}}'
+                  - SuppliedCompany:
+                      template: ACMELeasing
+                  - SuppliedEmail:
+                      template: '{{$Request.eMail}}'
+                  - SuppliedName:
+                      template: '{{$Request.Name}}'
+                  - Type:
+                      template: Mechanical
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+          - custom-action:
+              name: IBM Watson Tone Analyzer Get tone analysis
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-6'
+              action: GETTONEANALYSIS
+              map:
+                mappings:
+                  - content_type:
+                      template: Plain Text
+                  - sentences:
+                      expression: 'false'
+                  - text:
+                      template: '{{$Request.DescriptionOfDamage}}'
+                  - tones:
+                      template: emotion
+                  - version:
+                      template: '2017-05-08'
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceCreatecase
+                    $ref: '#/node-output/Salesforce Create case/response/payload'
+          - create-action:
+              name: Salesforce Create attachment
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-2'
+              map:
+                mappings:
+                  - Body:
+                      template: '{{$Request.PhotoOfCar}}'
+                  - ContentType:
+                      template: image/jpeg
+                  - Description:
+                      template: >-
+                        This is the photo of the vehicle with license plate
+                        {{$Request.LicensePlate}}
+                  - Name:
+                      template: CarPicture.jpg
+                  - ParentId:
+                      template: '{{$SalesforceCreatecase.Id}}'
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceCreatecase
+                    $ref: '#/node-output/Salesforce Create case/response/payload'
+                  - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                    $ref: >-
+                      #/node-output/IBM Watson Tone Analyzer Get tone
+                      analysis/response/payload
+          - update-action:
+              name: Salesforce Update case
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-4'
+              map:
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceCreatecase
+                    $ref: '#/node-output/Salesforce Create case/response/payload'
+                  - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                    $ref: >-
+                      #/node-output/IBM Watson Tone Analyzer Get tone
+                      analysis/response/payload
+                  - variable: SalesforceCreateattachment
+                    $ref: >-
+                      #/node-output/Salesforce Create
+                      attachment/response/payload
+                mappings: []
+              filter:
+                where:
+                  Id: '{{$SalesforceCreatecase.Id}}'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceCreatecase
+                    $ref: '#/node-output/Salesforce Create case/response/payload'
+                  - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                    $ref: >-
+                      #/node-output/IBM Watson Tone Analyzer Get tone
+                      analysis/response/payload
+                  - variable: SalesforceCreateattachment
+                    $ref: >-
+                      #/node-output/Salesforce Create
+                      attachment/response/payload
+              allow-empty-output: false
+          - response:
+              name: response-1
+              reply-maps:
+                - title: CarRepairClaim successfully created
+                  status-code: '201'
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: IBMWatsonVisualRecognitionClassifyimages
+                        $ref: >-
+                          #/node-output/IBM Watson Visual Recognition Classify
+                          images/response/payload
+                      - variable: Setvariable
+                        $ref: '#/node-output/Set variable/response/payload'
+                      - variable: SalesforceCreatecase
+                        $ref: '#/node-output/Salesforce Create case/response/payload'
+                      - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                        $ref: >-
+                          #/node-output/IBM Watson Tone Analyzer Get tone
+                          analysis/response/payload
+                      - variable: SalesforceCreateattachment
+                        $ref: >-
+                          #/node-output/Salesforce Create
+                          attachment/response/payload
+                      - variable: SalesforceUpdatecase
+                        $ref: '#/node-output/Salesforce Update case/response/payload'
+                      - variable: SalesforceUpdatecaseMetadata
+                        $ref: '#/node-output/Salesforce Update case/response'
+                    mappings:
+                      - CaseReference:
+                          template: '{{$SalesforceCreatecase.Id}}'
+                      - EstimatedBill:
+                          expression: '300'
+                      - EstimatedDays:
+                          expression: '3'
+                      - LicensePlate:
+                          template: '{{$Request.LicensePlate}}'
+                      - Name:
+                          template: '{{$Request.Name}}'
+                      - eMail:
+                          template: '{{$Request.eMail}}'
+                  input:
+                    - variable: Request
+                      $ref: '#/trigger/payload'
+                    - variable: IBMWatsonVisualRecognitionClassifyimages
+                      $ref: >-
+                        #/node-output/IBM Watson Visual Recognition Classify
+                        images/response/payload
+                    - variable: Setvariable
+                      $ref: '#/node-output/Set variable/response/payload'
+                    - variable: SalesforceCreatecase
+                      $ref: '#/node-output/Salesforce Create case/response/payload'
+                    - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                      $ref: >-
+                        #/node-output/IBM Watson Tone Analyzer Get tone
+                        analysis/response/payload
+                    - variable: SalesforceCreateattachment
+                      $ref: >-
+                        #/node-output/Salesforce Create
+                        attachment/response/payload
+                    - variable: SalesforceUpdatecase
+                      $ref: '#/node-output/Salesforce Update case/response/payload'
+                    - variable: SalesforceUpdatecaseMetadata
+                      $ref: '#/node-output/Salesforce Update case/response'
+  name: Car Insurance Cognitive API Lab Short
+models:
+  CarRepairClaim:
+    name: CarRepairClaim
+    properties:
+      Name:
+        required: false
+        id: false
+        type: string
+      eMail:
+        required: false
+        id: false
+        type: string
+      LicensePlate:
+        required: false
+        id: false
+        type: string
+      DescriptionOfDamage:
+        required: false
+        id: false
+        type: string
+      PhotoOfCar:
+        required: false
+        id: false
+        type: string
+      CaseReference:
+        required: false
+        id: true
+        type: string
+      ContactID:
+        required: false
+        id: false
+        type: string
+      EstimatedDays:
+        required: false
+        id: false
+        type: number
+      EstimatedBill:
+        required: false
+        id: false
+        type: number
+    plural: CarRepairClaim
+    description: ' '
+    operations:
+      create: '#/integration/assemblies/assembly-1'

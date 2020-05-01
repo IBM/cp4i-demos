@@ -1,0 +1,737 @@
+$integration: 'http://ibm.com/appconnect/integration/v2/integrationFile'
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        createCarRepairClaim:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: CarRepairClaim
+          output-context:
+            data: CarRepairClaim
+      options:
+        resources:
+          - business-object: CarRepairClaim
+            model:
+              $ref: '#/models/CarRepairClaim'
+            triggers:
+              create: createCarRepairClaim
+      type: api-trigger
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: Case
+      connector-type: salesforce
+      account-name: App Connect Trial
+      actions:
+        CREATE: {}
+    action-interface-2:
+      type: api-action
+      business-object: Attachment
+      connector-type: salesforce
+      account-name: App Connect Trial
+      actions:
+        CREATE: {}
+    action-interface-3:
+      type: api-action
+      business-object: Image
+      connector-type: watsonvr
+      account-name: App Connect Trial
+      actions:
+        CLASSIFYIMAGES: {}
+    action-interface-4:
+      type: api-action
+      business-object: Case
+      connector-type: salesforce
+      account-name: App Connect Trial
+      actions:
+        UPDATEALL: {}
+    action-interface-5:
+      type: api-action
+      business-object: Translate
+      connector-type: watsonlt
+      account-name: App Connect Trial
+      actions:
+        TRANSLATE: {}
+    action-interface-6:
+      type: api-action
+      business-object: Tone
+      connector-type: watsontoneanalyzer
+      account-name: App Connect Trial
+      actions:
+        GETTONEANALYSIS: {}
+    action-interface-7:
+      type: api-action
+      business-object: incident
+      connector-type: servicenow
+      account-name: App Connect Trial
+      actions:
+        CREATE: {}
+    action-interface-8:
+      type: api-action
+      business-object: sys_attachment
+      connector-type: servicenow
+      account-name: App Connect Trial
+      actions:
+        CREATE: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - custom-action:
+              name: IBM Watson Visual Recognition Classify images
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-3'
+              action: CLASSIFYIMAGES
+              map:
+                mappings:
+                  - classifier_id:
+                      template: default
+                  - images_file:
+                      template: '{{$Request.PhotoOfCar}}'
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+          - set-variable:
+              name: Set variable
+              map:
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      imageCar:
+                        type: string
+                      imagePerson:
+                        type: string
+                      classifiersHumanReadable:
+                        type: string
+                      imageRoadster:
+                        type: string
+                mappings:
+                  - variable:
+                      mappings:
+                        - classifiersHumanReadable:
+                            template: >-
+                              {{$join($IBMWatsonVisualRecognitionClassifyimages.classify_images.classifiers.classes.class,
+                              ', ')}}
+                        - imageCar:
+                            template: >-
+                              {{$IBMWatsonVisualRecognitionClassifyimages.classify_images.classifiers.classes[class='car']}}
+                        - imagePerson:
+                            template: >-
+                              {{$IBMWatsonVisualRecognitionClassifyimages.classify_images.classifiers.classes[class='person']}}
+                        - imageRoadster:
+                            template: >-
+                              {{$IBMWatsonVisualRecognitionClassifyimages.classify_images.classifiers.classes[class='roadster']}}
+          - if:
+              name: If
+              input:
+                - variable: Request
+                  $ref: '#/trigger/payload'
+                - variable: IBMWatsonVisualRecognitionClassifyimages
+                  $ref: >-
+                    #/node-output/IBM Watson Visual Recognition Classify
+                    images/response/payload
+                - variable: Setvariable
+                  $ref: '#/node-output/Set variable/response/payload'
+              branch:
+                - condition:
+                    '{{$Setvariable.variable.imageCar}}':
+                      =: ''
+                  execute: []
+                  completion-action:
+                    terminate:
+                      error:
+                        input:
+                          - variable: Request
+                            $ref: '#/trigger/payload'
+                          - variable: IBMWatsonVisualRecognitionClassifyimages
+                            $ref: >-
+                              #/node-output/IBM Watson Visual Recognition
+                              Classify images/response/payload
+                          - variable: Setvariable
+                            $ref: '#/node-output/Set variable/response/payload'
+                        message: 'There is no car in this image, please resubmit'
+                        status-code: 400
+              else:
+                execute: []
+              output-schema: {}
+          - create-action:
+              name: Salesforce Create case
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              map:
+                mappings:
+                  - ContactId:
+                      template: 0033z00002d9jSFAAY
+                  - Description:
+                      template: '{{$Request.DescriptionOfDamage}}'
+                  - EngineeringReqNumber__c:
+                      template: '{{$Request.LicensePlate}}'
+                  - Origin:
+                      template: Web
+                  - Priority:
+                      template: Medium
+                  - Reason:
+                      template: Breakdown
+                  - Status:
+                      template: New
+                  - Subject:
+                      template: 'Car Breakdown - {{$Request.LicensePlate}}'
+                  - SuppliedCompany:
+                      template: ACMELeasing
+                  - SuppliedEmail:
+                      template: '{{$Request.eMail}}'
+                  - SuppliedName:
+                      template: '{{$Request.Name}}'
+                  - Type:
+                      template: Mechanical
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+          - custom-action:
+              name: IBM Watson Tone Analyzer Get tone analysis
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-6'
+              action: GETTONEANALYSIS
+              map:
+                mappings:
+                  - content_type:
+                      template: Plain Text
+                  - sentences:
+                      expression: 'false'
+                  - text:
+                      template: '{{$Request.DescriptionOfDamage}}'
+                  - tones:
+                      template: emotion
+                  - version:
+                      template: '2017-05-08'
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceCreatecase
+                    $ref: '#/node-output/Salesforce Create case/response/payload'
+          - create-action:
+              name: Salesforce Create attachment
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-2'
+              map:
+                mappings:
+                  - Body:
+                      template: '{{$Request.PhotoOfCar}}'
+                  - ContentType:
+                      template: image/jpeg
+                  - Description:
+                      template: >-
+                        This is the photo of the vehicle with license plate
+                        {{$Request.LicensePlate}}
+                  - Name:
+                      template: CarPicture.jpg
+                  - ParentId:
+                      template: '{{$SalesforceCreatecase.Id}}'
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceCreatecase
+                    $ref: '#/node-output/Salesforce Create case/response/payload'
+                  - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                    $ref: >-
+                      #/node-output/IBM Watson Tone Analyzer Get tone
+                      analysis/response/payload
+          - update-action:
+              name: Salesforce Update case
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-4'
+              map:
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceCreatecase
+                    $ref: '#/node-output/Salesforce Create case/response/payload'
+                  - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                    $ref: >-
+                      #/node-output/IBM Watson Tone Analyzer Get tone
+                      analysis/response/payload
+                  - variable: SalesforceCreateattachment
+                    $ref: >-
+                      #/node-output/Salesforce Create
+                      attachment/response/payload
+                mappings: []
+              filter:
+                where:
+                  Id: '{{$SalesforceCreatecase.Id}}'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceCreatecase
+                    $ref: '#/node-output/Salesforce Create case/response/payload'
+                  - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                    $ref: >-
+                      #/node-output/IBM Watson Tone Analyzer Get tone
+                      analysis/response/payload
+                  - variable: SalesforceCreateattachment
+                    $ref: >-
+                      #/node-output/Salesforce Create
+                      attachment/response/payload
+              allow-empty-output: false
+          - if:
+              name: If 3
+              input:
+                - variable: Request
+                  $ref: '#/trigger/payload'
+                - variable: IBMWatsonVisualRecognitionClassifyimages
+                  $ref: >-
+                    #/node-output/IBM Watson Visual Recognition Classify
+                    images/response/payload
+                - variable: Setvariable
+                  $ref: '#/node-output/Set variable/response/payload'
+                - variable: SalesforceCreatecase
+                  $ref: '#/node-output/Salesforce Create case/response/payload'
+                - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                  $ref: >-
+                    #/node-output/IBM Watson Tone Analyzer Get tone
+                    analysis/response/payload
+                - variable: SalesforceCreateattachment
+                  $ref: '#/node-output/Salesforce Create attachment/response/payload'
+                - variable: SalesforceUpdatecase
+                  $ref: '#/node-output/Salesforce Update case/response/payload'
+                - variable: SalesforceUpdatecaseMetadata
+                  $ref: '#/node-output/Salesforce Update case/response'
+              branch:
+                - condition:
+                    '{{$Setvariable.variable.imageRoadster}}':
+                      neq: ''
+                  execute:
+                    - set-variable:
+                        name: Set variable 2
+                        map:
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: IBMWatsonVisualRecognitionClassifyimages
+                              $ref: >-
+                                #/node-output/IBM Watson Visual Recognition
+                                Classify images/response/payload
+                            - variable: Setvariable
+                              $ref: '#/node-output/Set variable/response/payload'
+                            - variable: SalesforceCreatecase
+                              $ref: >-
+                                #/node-output/Salesforce Create
+                                case/response/payload
+                            - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                              $ref: >-
+                                #/node-output/IBM Watson Tone Analyzer Get tone
+                                analysis/response/payload
+                            - variable: SalesforceCreateattachment
+                              $ref: >-
+                                #/node-output/Salesforce Create
+                                attachment/response/payload
+                            - variable: SalesforceUpdatecase
+                              $ref: >-
+                                #/node-output/Salesforce Update
+                                case/response/payload
+                            - variable: SalesforceUpdatecaseMetadata
+                              $ref: '#/node-output/Salesforce Update case/response'
+                          customSchemas:
+                            properties.`variable`:
+                              type: object
+                              properties:
+                                thirdPartyMessage:
+                                  type: string
+                          mappings:
+                            - variable:
+                                mappings:
+                                  - thirdPartyMessage:
+                                      template: >-
+                                        Hi 3rd party, we have a roadster for you
+                                        with Damage. The  License Plate
+                                        {{$Request.LicensePlate}}. Please add it
+                                        to your list and let us know your
+                                        estimated time for repair.
+                    - custom-action:
+                        name: IBM Watson Language Translator Translate
+                        target:
+                          $ref: '#/integration/action-interfaces/action-interface-5'
+                        action: TRANSLATE
+                        map:
+                          mappings:
+                            - model_id:
+                                template: en-es
+                            - text:
+                                template: '{{$Setvariable2.variable.thirdPartyMessage}}'
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: Setvariable2
+                              $ref: >-
+                                #/block/If 3/node-output/Set variable
+                                2/response/payload
+                            - variable: IBMWatsonVisualRecognitionClassifyimages
+                              $ref: >-
+                                #/node-output/IBM Watson Visual Recognition
+                                Classify images/response/payload
+                            - variable: Setvariable
+                              $ref: '#/node-output/Set variable/response/payload'
+                            - variable: SalesforceCreatecase
+                              $ref: >-
+                                #/node-output/Salesforce Create
+                                case/response/payload
+                            - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                              $ref: >-
+                                #/node-output/IBM Watson Tone Analyzer Get tone
+                                analysis/response/payload
+                            - variable: SalesforceCreateattachment
+                              $ref: >-
+                                #/node-output/Salesforce Create
+                                attachment/response/payload
+                            - variable: SalesforceUpdatecase
+                              $ref: >-
+                                #/node-output/Salesforce Update
+                                case/response/payload
+                            - variable: SalesforceUpdatecaseMetadata
+                              $ref: '#/node-output/Salesforce Update case/response'
+                    - create-action:
+                        name: ServiceNow Create incident
+                        target:
+                          $ref: '#/integration/action-interfaces/action-interface-7'
+                        map:
+                          mappings:
+                            - caller_id:
+                                template: a8f98bb0eb32010045e1a5115206fe3a
+                            - description:
+                                template: >-
+                                  {{$IBMWatsonLanguageTranslatorTranslate.translations.translation}}
+                                  (English={{$Setvariable2.variable.thirdPartyMessage}})
+                            - short_description:
+                                template: 'New Repair: {{$Request.LicensePlate}}'
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: Setvariable2
+                              $ref: >-
+                                #/block/If 3/node-output/Set variable
+                                2/response/payload
+                            - variable: IBMWatsonLanguageTranslatorTranslate
+                              $ref: >-
+                                #/block/If 3/node-output/IBM Watson Language
+                                Translator Translate/response/payload
+                            - variable: IBMWatsonVisualRecognitionClassifyimages
+                              $ref: >-
+                                #/node-output/IBM Watson Visual Recognition
+                                Classify images/response/payload
+                            - variable: Setvariable
+                              $ref: '#/node-output/Set variable/response/payload'
+                            - variable: SalesforceCreatecase
+                              $ref: >-
+                                #/node-output/Salesforce Create
+                                case/response/payload
+                            - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                              $ref: >-
+                                #/node-output/IBM Watson Tone Analyzer Get tone
+                                analysis/response/payload
+                            - variable: SalesforceCreateattachment
+                              $ref: >-
+                                #/node-output/Salesforce Create
+                                attachment/response/payload
+                            - variable: SalesforceUpdatecase
+                              $ref: >-
+                                #/node-output/Salesforce Update
+                                case/response/payload
+                            - variable: SalesforceUpdatecaseMetadata
+                              $ref: '#/node-output/Salesforce Update case/response'
+                    - create-action:
+                        name: ServiceNow Create attachment
+                        target:
+                          $ref: '#/integration/action-interfaces/action-interface-8'
+                        map:
+                          mappings:
+                            - AttachmentOwnerId:
+                                template: '{{$ServiceNowCreateincident.sys_id}}'
+                            - AttachmentOwnerType:
+                                template: incident
+                            - FileContent:
+                                template: '{{$Request.PhotoOfCar}}'
+                            - file_name:
+                                template: CarPhoto
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: Setvariable2
+                              $ref: >-
+                                #/block/If 3/node-output/Set variable
+                                2/response/payload
+                            - variable: IBMWatsonLanguageTranslatorTranslate
+                              $ref: >-
+                                #/block/If 3/node-output/IBM Watson Language
+                                Translator Translate/response/payload
+                            - variable: ServiceNowCreateincident
+                              $ref: >-
+                                #/block/If 3/node-output/ServiceNow Create
+                                incident/response/payload
+                            - variable: IBMWatsonVisualRecognitionClassifyimages
+                              $ref: >-
+                                #/node-output/IBM Watson Visual Recognition
+                                Classify images/response/payload
+                            - variable: Setvariable
+                              $ref: '#/node-output/Set variable/response/payload'
+                            - variable: SalesforceCreatecase
+                              $ref: >-
+                                #/node-output/Salesforce Create
+                                case/response/payload
+                            - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                              $ref: >-
+                                #/node-output/IBM Watson Tone Analyzer Get tone
+                                analysis/response/payload
+                            - variable: SalesforceCreateattachment
+                              $ref: >-
+                                #/node-output/Salesforce Create
+                                attachment/response/payload
+                            - variable: SalesforceUpdatecase
+                              $ref: >-
+                                #/node-output/Salesforce Update
+                                case/response/payload
+                            - variable: SalesforceUpdatecaseMetadata
+                              $ref: '#/node-output/Salesforce Update case/response'
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: Setvariable2
+                        $ref: >-
+                          #/block/If 3/node-output/Set variable
+                          2/response/payload
+                      - variable: IBMWatsonLanguageTranslatorTranslate
+                        $ref: >-
+                          #/block/If 3/node-output/IBM Watson Language
+                          Translator Translate/response/payload
+                      - variable: IBMWatsonVisualRecognitionClassifyimages
+                        $ref: >-
+                          #/node-output/IBM Watson Visual Recognition Classify
+                          images/response/payload
+                      - variable: Setvariable
+                        $ref: '#/node-output/Set variable/response/payload'
+                      - variable: SalesforceCreatecase
+                        $ref: '#/node-output/Salesforce Create case/response/payload'
+                      - variable: SalesforceCreateattachment
+                        $ref: >-
+                          #/node-output/Salesforce Create
+                          attachment/response/payload
+                      - variable: SalesforceUpdatecase
+                        $ref: '#/node-output/Salesforce Update case/response/payload'
+                      - variable: SalesforceUpdatecaseMetadata
+                        $ref: '#/node-output/Salesforce Update case/response'
+                    mappings:
+                      - estimatedBill:
+                          template: '500'
+                      - estimatedDays:
+                          template: '5'
+              else:
+                execute: []
+                map:
+                  $map: 'http://ibm.com/appconnect/map/v1'
+                  input:
+                    - variable: Request
+                      $ref: '#/trigger/payload'
+                    - variable: IBMWatsonVisualRecognitionClassifyimages
+                      $ref: >-
+                        #/node-output/IBM Watson Visual Recognition Classify
+                        images/response/payload
+                    - variable: Setvariable
+                      $ref: '#/node-output/Set variable/response/payload'
+                    - variable: SalesforceCreatecase
+                      $ref: '#/node-output/Salesforce Create case/response/payload'
+                    - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                      $ref: >-
+                        #/node-output/IBM Watson Tone Analyzer Get tone
+                        analysis/response/payload
+                    - variable: SalesforceCreateattachment
+                      $ref: >-
+                        #/node-output/Salesforce Create
+                        attachment/response/payload
+                    - variable: SalesforceUpdatecase
+                      $ref: '#/node-output/Salesforce Update case/response/payload'
+                    - variable: SalesforceUpdatecaseMetadata
+                      $ref: '#/node-output/Salesforce Update case/response'
+                  mappings:
+                    - estimatedBill:
+                        template: '300'
+                    - estimatedDays:
+                        template: '3'
+              output-schema:
+                required:
+                  - estimatedDays
+                  - estimatedBill
+                properties:
+                  estimatedDays:
+                    type: string
+                    title: estimatedDays
+                  estimatedBill:
+                    type: string
+                    title: estimatedBill
+                title: Output Schema
+                type: object
+          - response:
+              name: response-1
+              reply-maps:
+                - title: CarRepairClaim successfully created
+                  status-code: '201'
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: IBMWatsonVisualRecognitionClassifyimages
+                        $ref: >-
+                          #/node-output/IBM Watson Visual Recognition Classify
+                          images/response/payload
+                      - variable: Setvariable
+                        $ref: '#/node-output/Set variable/response/payload'
+                      - variable: SalesforceCreatecase
+                        $ref: '#/node-output/Salesforce Create case/response/payload'
+                      - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                        $ref: >-
+                          #/node-output/IBM Watson Tone Analyzer Get tone
+                          analysis/response/payload
+                      - variable: SalesforceCreateattachment
+                        $ref: >-
+                          #/node-output/Salesforce Create
+                          attachment/response/payload
+                      - variable: SalesforceUpdatecase
+                        $ref: '#/node-output/Salesforce Update case/response/payload'
+                      - variable: SalesforceUpdatecaseMetadata
+                        $ref: '#/node-output/Salesforce Update case/response'
+                      - variable: If3
+                        $ref: '#/node-output/If 3/response/payload'
+                    mappings:
+                      - CaseReference:
+                          template: '{{$SalesforceCreatecase.Id}}'
+                      - EstimatedBill:
+                          expression: '$If3.estimatedBill '
+                      - EstimatedDays:
+                          expression: '$If3.estimatedDays '
+                      - LicensePlate:
+                          template: '{{$Request.LicensePlate}}'
+                      - Name:
+                          template: '{{$Request.Name}}'
+                      - eMail:
+                          template: '{{$Request.eMail}}'
+                  input:
+                    - variable: Request
+                      $ref: '#/trigger/payload'
+                    - variable: IBMWatsonVisualRecognitionClassifyimages
+                      $ref: >-
+                        #/node-output/IBM Watson Visual Recognition Classify
+                        images/response/payload
+                    - variable: Setvariable
+                      $ref: '#/node-output/Set variable/response/payload'
+                    - variable: SalesforceCreatecase
+                      $ref: '#/node-output/Salesforce Create case/response/payload'
+                    - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                      $ref: >-
+                        #/node-output/IBM Watson Tone Analyzer Get tone
+                        analysis/response/payload
+                    - variable: SalesforceCreateattachment
+                      $ref: >-
+                        #/node-output/Salesforce Create
+                        attachment/response/payload
+                    - variable: SalesforceUpdatecase
+                      $ref: '#/node-output/Salesforce Update case/response/payload'
+                    - variable: SalesforceUpdatecaseMetadata
+                      $ref: '#/node-output/Salesforce Update case/response'
+                    - variable: If3
+                      $ref: '#/node-output/If 3/response/payload'
+  name: Car Insurance Cognitive API Lab
+models:
+  CarRepairClaim:
+    name: CarRepairClaim
+    properties:
+      Name:
+        required: false
+        id: false
+        type: string
+      eMail:
+        required: false
+        id: false
+        type: string
+      LicensePlate:
+        required: false
+        id: false
+        type: string
+      DescriptionOfDamage:
+        required: false
+        id: false
+        type: string
+      PhotoOfCar:
+        required: false
+        id: false
+        type: string
+      CaseReference:
+        required: false
+        id: true
+        type: string
+      ContactID:
+        required: false
+        id: false
+        type: string
+      EstimatedDays:
+        required: false
+        id: false
+        type: number
+      EstimatedBill:
+        required: false
+        id: false
+        type: number
+    plural: CarRepairClaim
+    description: ' '
+    operations:
+      create: '#/integration/assemblies/assembly-1'
