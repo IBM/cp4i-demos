@@ -41,13 +41,6 @@ integration:
       account-name: App Connect Trial
       actions:
         CLASSIFYIMAGES: {}
-    action-interface-4:
-      type: api-action
-      business-object: Case
-      connector-type: salesforce
-      account-name: App Connect Trial
-      actions:
-        UPDATEALL: {}
     action-interface-5:
       type: api-action
       business-object: Translate
@@ -73,6 +66,20 @@ integration:
       type: api-action
       business-object: sys_attachment
       connector-type: servicenow
+      account-name: App Connect Trial
+      actions:
+        CREATE: {}
+    action-interface-9:
+      type: api-action
+      business-object: Contact
+      connector-type: salesforce
+      account-name: App Connect Trial
+      actions:
+        RETRIEVEALL: {}
+    action-interface-10:
+      type: api-action
+      business-object: CaseComment
+      connector-type: salesforce
       account-name: App Connect Trial
       actions:
         CREATE: {}
@@ -167,6 +174,26 @@ integration:
               else:
                 execute: []
               output-schema: {}
+          - retrieve-action:
+              name: Salesforce Retrieve contacts
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-9'
+              filter:
+                where:
+                  Name: Andy Young
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                    $ref: >-
+                      #/node-output/IBM Watson Visual Recognition Classify
+                      images/response/payload
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                limit: 1
+              allow-truncation: false
+              pagination-type: TOKEN
+              allow-empty-output: false
           - create-action:
               name: Salesforce Create case
               target:
@@ -174,7 +201,7 @@ integration:
               map:
                 mappings:
                   - ContactId:
-                      template: 0033z00002d9jSFAAY
+                      template: '{{$SalesforceRetrievecontacts.Id}}'
                   - Description:
                       template: '{{$Request.DescriptionOfDamage}}'
                   - EngineeringReqNumber__c:
@@ -207,35 +234,12 @@ integration:
                       images/response/payload
                   - variable: Setvariable
                     $ref: '#/node-output/Set variable/response/payload'
-          - custom-action:
-              name: IBM Watson Tone Analyzer Get tone analysis
-              target:
-                $ref: '#/integration/action-interfaces/action-interface-6'
-              action: GETTONEANALYSIS
-              map:
-                mappings:
-                  - content_type:
-                      template: Plain Text
-                  - sentences:
-                      expression: 'false'
-                  - text:
-                      template: '{{$Request.DescriptionOfDamage}}'
-                  - tones:
-                      template: emotion
-                  - version:
-                      template: '2017-05-08'
-                $map: 'http://ibm.com/appconnect/map/v1'
-                input:
-                  - variable: Request
-                    $ref: '#/trigger/payload'
-                  - variable: IBMWatsonVisualRecognitionClassifyimages
+                  - variable: SalesforceRetrievecontacts
                     $ref: >-
-                      #/node-output/IBM Watson Visual Recognition Classify
-                      images/response/payload
-                  - variable: Setvariable
-                    $ref: '#/node-output/Set variable/response/payload'
-                  - variable: SalesforceCreatecase
-                    $ref: '#/node-output/Salesforce Create case/response/payload'
+                      #/node-output/Salesforce Retrieve
+                      contacts/response/payload
+                  - variable: SalesforceRetrievecontactsMetadata
+                    $ref: '#/node-output/Salesforce Retrieve contacts/response'
           - create-action:
               name: Salesforce Create attachment
               target:
@@ -264,17 +268,35 @@ integration:
                       images/response/payload
                   - variable: Setvariable
                     $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceRetrievecontacts
+                    $ref: >-
+                      #/node-output/Salesforce Retrieve
+                      contacts/response/payload
+                  - variable: SalesforceRetrievecontactsMetadata
+                    $ref: '#/node-output/Salesforce Retrieve contacts/response'
                   - variable: SalesforceCreatecase
                     $ref: '#/node-output/Salesforce Create case/response/payload'
                   - variable: IBMWatsonToneAnalyzerGettoneanalysis
                     $ref: >-
                       #/node-output/IBM Watson Tone Analyzer Get tone
                       analysis/response/payload
-          - update-action:
-              name: Salesforce Update case
+          - custom-action:
+              name: IBM Watson Tone Analyzer Get tone analysis
               target:
-                $ref: '#/integration/action-interfaces/action-interface-4'
+                $ref: '#/integration/action-interfaces/action-interface-6'
+              action: GETTONEANALYSIS
               map:
+                mappings:
+                  - content_type:
+                      template: Plain Text
+                  - sentences:
+                      expression: 'false'
+                  - text:
+                      template: '{{$Request.DescriptionOfDamage}}'
+                  - tones:
+                      template: emotion
+                  - version:
+                      template: '2017-05-08'
                 $map: 'http://ibm.com/appconnect/map/v1'
                 input:
                   - variable: Request
@@ -285,20 +307,29 @@ integration:
                       images/response/payload
                   - variable: Setvariable
                     $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceRetrievecontacts
+                    $ref: >-
+                      #/node-output/Salesforce Retrieve
+                      contacts/response/payload
+                  - variable: SalesforceRetrievecontactsMetadata
+                    $ref: '#/node-output/Salesforce Retrieve contacts/response'
                   - variable: SalesforceCreatecase
                     $ref: '#/node-output/Salesforce Create case/response/payload'
-                  - variable: IBMWatsonToneAnalyzerGettoneanalysis
-                    $ref: >-
-                      #/node-output/IBM Watson Tone Analyzer Get tone
-                      analysis/response/payload
-                  - variable: SalesforceCreateattachment
-                    $ref: >-
-                      #/node-output/Salesforce Create
-                      attachment/response/payload
-                mappings: []
-              filter:
-                where:
-                  Id: '{{$SalesforceCreatecase.Id}}'
+          - create-action:
+              name: Salesforce Create case comment
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-10'
+              map:
+                mappings:
+                  - CommentBody:
+                      template: >-
+                        Watson tone analysis  is
+                        {{$IBMWatsonToneAnalyzerGettoneanalysis.dominant_tones.document_tone.emotion_tone.tone_name}}
+                  - IsPublished:
+                      expression: 'true'
+                  - ParentId:
+                      template: '{{$SalesforceCreatecase.Id}}'
+                $map: 'http://ibm.com/appconnect/map/v1'
                 input:
                   - variable: Request
                     $ref: '#/trigger/payload'
@@ -308,17 +339,22 @@ integration:
                       images/response/payload
                   - variable: Setvariable
                     $ref: '#/node-output/Set variable/response/payload'
+                  - variable: SalesforceRetrievecontacts
+                    $ref: >-
+                      #/node-output/Salesforce Retrieve
+                      contacts/response/payload
+                  - variable: SalesforceRetrievecontactsMetadata
+                    $ref: '#/node-output/Salesforce Retrieve contacts/response'
                   - variable: SalesforceCreatecase
                     $ref: '#/node-output/Salesforce Create case/response/payload'
-                  - variable: IBMWatsonToneAnalyzerGettoneanalysis
-                    $ref: >-
-                      #/node-output/IBM Watson Tone Analyzer Get tone
-                      analysis/response/payload
                   - variable: SalesforceCreateattachment
                     $ref: >-
                       #/node-output/Salesforce Create
                       attachment/response/payload
-              allow-empty-output: false
+                  - variable: IBMWatsonToneAnalyzerGettoneanalysis
+                    $ref: >-
+                      #/node-output/IBM Watson Tone Analyzer Get tone
+                      analysis/response/payload
           - if:
               name: If 3
               input:
@@ -469,24 +505,30 @@ integration:
                                 Classify images/response/payload
                             - variable: Setvariable
                               $ref: '#/node-output/Set variable/response/payload'
+                            - variable: SalesforceRetrievecontacts
+                              $ref: >-
+                                #/node-output/Salesforce Retrieve
+                                contacts/response/payload
+                            - variable: SalesforceRetrievecontactsMetadata
+                              $ref: >-
+                                #/node-output/Salesforce Retrieve
+                                contacts/response
                             - variable: SalesforceCreatecase
                               $ref: >-
                                 #/node-output/Salesforce Create
                                 case/response/payload
-                            - variable: IBMWatsonToneAnalyzerGettoneanalysis
-                              $ref: >-
-                                #/node-output/IBM Watson Tone Analyzer Get tone
-                                analysis/response/payload
                             - variable: SalesforceCreateattachment
                               $ref: >-
                                 #/node-output/Salesforce Create
                                 attachment/response/payload
-                            - variable: SalesforceUpdatecase
+                            - variable: IBMWatsonToneAnalyzerGettoneanalysis
                               $ref: >-
-                                #/node-output/Salesforce Update
-                                case/response/payload
-                            - variable: SalesforceUpdatecaseMetadata
-                              $ref: '#/node-output/Salesforce Update case/response'
+                                #/node-output/IBM Watson Tone Analyzer Get tone
+                                analysis/response/payload
+                            - variable: SalesforceCreatecasecomment
+                              $ref: >-
+                                #/node-output/Salesforce Create case
+                                comment/response/payload
                     - create-action:
                         name: ServiceNow Create attachment
                         target:
@@ -523,24 +565,30 @@ integration:
                                 Classify images/response/payload
                             - variable: Setvariable
                               $ref: '#/node-output/Set variable/response/payload'
+                            - variable: SalesforceRetrievecontacts
+                              $ref: >-
+                                #/node-output/Salesforce Retrieve
+                                contacts/response/payload
+                            - variable: SalesforceRetrievecontactsMetadata
+                              $ref: >-
+                                #/node-output/Salesforce Retrieve
+                                contacts/response
                             - variable: SalesforceCreatecase
                               $ref: >-
                                 #/node-output/Salesforce Create
                                 case/response/payload
-                            - variable: IBMWatsonToneAnalyzerGettoneanalysis
-                              $ref: >-
-                                #/node-output/IBM Watson Tone Analyzer Get tone
-                                analysis/response/payload
                             - variable: SalesforceCreateattachment
                               $ref: >-
                                 #/node-output/Salesforce Create
                                 attachment/response/payload
-                            - variable: SalesforceUpdatecase
+                            - variable: IBMWatsonToneAnalyzerGettoneanalysis
                               $ref: >-
-                                #/node-output/Salesforce Update
-                                case/response/payload
-                            - variable: SalesforceUpdatecaseMetadata
-                              $ref: '#/node-output/Salesforce Update case/response'
+                                #/node-output/IBM Watson Tone Analyzer Get tone
+                                analysis/response/payload
+                            - variable: SalesforceCreatecasecomment
+                              $ref: >-
+                                #/node-output/Salesforce Create case
+                                comment/response/payload
                   map:
                     $map: 'http://ibm.com/appconnect/map/v1'
                     input:
