@@ -1,0 +1,206 @@
+swagger: '2.0'
+info:
+  title: chatbot
+  x-ibm-name: chatbot
+  version: 0.0.1
+schemes:
+  - https
+basePath: /chatbot
+produces:
+  - application/json
+consumes:
+  - application/json
+security:
+  - {}
+securityDefinitions:
+  clientIdHeader:
+    type: apiKey
+    in: header
+    name: X-IBM-Client-Id
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - gatewayscript:
+          version: 2.0.0
+          title: gatewayscript
+          source: >-
+            var apim = require('apim');
+            apim.readInputAsJSON(function (error, json) {
+
+            if (error)
+
+            {
+
+            // handle error
+
+            }
+
+            else
+
+            {
+
+            console.debug("Request: " + json.apiName);
+
+
+            apim.setvariable('message.headers.x-api-name', json.apiName );
+
+
+            apim.setvariable('myApi', json.apiName);
+
+
+            }
+
+            }
+
+            );
+
+
+      - redact:
+          version: 2.0.0
+          title: redact
+          redactions:
+            - action: remove
+              path: message.body.**.apiName
+      - switch:
+          title: switch
+          case:
+            - condition: (myApi = 'classifyimages')
+              execute:
+                - set-variable:
+                    title: set-variable
+                    actions:
+                      - set: message.headers.x-ibm-client-id
+                        value: $(classifyImages-key)
+                        type: string
+                    version: 2.0.0
+                - invoke:
+                    version: 2.0.0
+                    target-url: $(classifyImages-endpoint)
+                    verb: POST
+                    header-control:
+                      type: blacklist
+                      values: []
+                    parameter-control:
+                      type: blacklist
+                      values: []
+                    username: $(username)
+                    password: $(passw)
+            - condition: (myApi = 'stormpath')
+              execute:
+                - set-variable:
+                    version: 2.0.0
+                    title: set-variable
+                    actions:
+                      - set: message.headers.x-ibm-client-id
+                        value: $(stormpath-key)
+                        type: string
+                - invoke:
+                    version: 2.0.0
+                    target-url: $(stormpath-endpoint)
+                    verb: POST
+                    header-control:
+                      type: blacklist
+                      values: []
+                    parameter-control:
+                      type: blacklist
+                      values: []
+                    username: $(username)
+                    password: $(passw)
+            - condition: (myApi = 'summary')
+              execute:
+                - set-variable:
+                    title: set-variable
+                    actions:
+                      - set: message.headers.x-ibm-client-id
+                        value: $(summary-key)
+                        type: string
+                    version: 2.0.0
+                - gatewayscript:
+                    version: 2.0.0
+                    title: gatewayscript
+                    source: |-
+                      var apim = require('apim');
+                      var request = apim.getvariable('request.body');
+                      var requestString = JSON.stringify(request);
+                      var incidentID = JSON.parse(requestString).incidentId;
+
+                      apim.setvariable('incident', incidentID);
+                - invoke:
+                    target-url: $(summary-endpoint)/$(incident)
+                    verb: GET
+                    version: 2.0.0
+                    header-control:
+                      type: blacklist
+                      values: []
+                    parameter-control:
+                      type: blacklist
+                      values: []
+                    username: $(username)
+                    password: $(passw)
+          version: 2.0.0
+  phase: realized
+  properties:
+    username:
+      value: XXXX
+      description: ''
+      encoded: false
+    passw:
+      value: XXXX
+      description: ''
+      encoded: false
+    summary-endpoint:
+      value: >-
+        https://XXXX.us-south.containers.appdomain.cloud/IncidentSummary/summary
+      description: ''
+      encoded: false
+    summary-key:
+      value: XXX
+      description: ''
+      encoded: false
+    stormpath-endpoint:
+      value: >-
+        https://XXXX.us-south.containers.appdomain.cloud/Tickets_StormIncWeatherAPI/StormData/stormpath
+      description: ''
+      encoded: false
+    stormpath-key:
+      value: XXXX
+      description: ''
+      encoded: false
+    classifyImages-key:
+      value: XXXX
+      description: ''
+      encoded: false
+    classifyImages-endpoint:
+      value: >-
+        https://XXXX.us-south.containers.appdomain.cloud/classifyImagesV4/images/classify
+      description: ''
+      encoded: false
+  application-authentication:
+    certificate: false
+  gateway: datapower-api-gateway
+  type: rest
+  activity-log:
+    enabled: true
+    error-content: header
+    success-content: activity
+tags: []
+definitions: {}
+paths:
+  /:
+    post:
+      responses:
+        '200':
+          description: 200 OK
+      parameters:
+        - name: reqIn
+          in: body
+          required: true
+          schema:
+            type: object
+      consumes: []
+      produces: []
+      summary: Route to claim APIs

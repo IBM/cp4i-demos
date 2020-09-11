@@ -1,0 +1,2884 @@
+{
+  "intents": [
+    {
+      "intent": "Bot_Control_Unsure",
+      "examples": [
+        {
+          "text": "I have no idea what you are looking for"
+        },
+        {
+          "text": "I have no idea, actually"
+        },
+        {
+          "text": "I don t know what you want"
+        },
+        {
+          "text": "I don t know what you need"
+        },
+        {
+          "text": "You got me"
+        },
+        {
+          "text": "To be honest, I m really not sure"
+        },
+        {
+          "text": "No idea"
+        },
+        {
+          "text": "No clue"
+        },
+        {
+          "text": "I m not yet convinced"
+        },
+        {
+          "text": "I m not sure what will make you happy"
+        },
+        {
+          "text": "I m not certain I get what you re saying"
+        },
+        {
+          "text": "I haven't got a clue"
+        }
+      ],
+      "description": "Indicate no definite answer to a question."
+    },
+    {
+      "intent": "Insurance_File_Claim",
+      "examples": [
+        {
+          "text": "Is it possible to file a claim using the purchase date?"
+        },
+        {
+          "text": "Is there a section on your website for filing claim?"
+        },
+        {
+          "text": "I want to file a claim for my car which got damaged in a storm"
+        },
+        {
+          "text": "How to make a claim for storm insurance?"
+        },
+        {
+          "text": "Will I be able to file a claim from your portal?"
+        },
+        {
+          "text": "What a way to seek compensation for my loss?"
+        },
+        {
+          "text": "Wanna file a claim for storm insurance"
+        },
+        {
+          "text": "storm"
+        },
+        {
+          "text": "Do you have any information regarding filing claims?"
+        },
+        {
+          "text": "File a claim for damages caused by natural calamity"
+        },
+        {
+          "text": "How to file a claim for life insurance?"
+        },
+        {
+          "text": "How to file a claim, wanna know more about it, please tell?"
+        },
+        {
+          "text": "How to make a claim for home insurance?"
+        },
+        {
+          "text": "I have to file a claim under medical tourism insurance policy, how to do?"
+        },
+        {
+          "text": "I want to file a claim for my car which got damaged in an accident"
+        },
+        {
+          "text": "I want to file a claim for property insurance."
+        },
+        {
+          "text": "I wish to file a claim for property and liabilities"
+        },
+        {
+          "text": "What should be done to file a claim?"
+        },
+        {
+          "text": "What is the process to file a claim?"
+        },
+        {
+          "text": "What are the steps to file a claim for a two wheeler?"
+        },
+        {
+          "text": "Wanted to know about claim filing"
+        },
+        {
+          "text": "My gold jewellary has been stolen, wanna file a claim."
+        },
+        {
+          "text": "Looking for some help with claim filing process."
+        }
+      ],
+      "description": "File a claim."
+    },
+    {
+      "intent": "General_About_You",
+      "examples": [
+        {
+          "text": "What should I know about you?"
+        },
+        {
+          "text": "Why are you here?"
+        },
+        {
+          "text": "Tell me about your life"
+        },
+        {
+          "text": "Let us talk about you"
+        },
+        {
+          "text": "Introduce your self"
+        },
+        {
+          "text": "I want to set up the chat bot for my shop"
+        },
+        {
+          "text": "How old are you?"
+        },
+        {
+          "text": "How do you function?"
+        },
+        {
+          "text": "Do you know who you are?"
+        },
+        {
+          "text": "Do you have a name?"
+        },
+        {
+          "text": "Describe your self"
+        },
+        {
+          "text": "Can I use another language?"
+        },
+        {
+          "text": "About you"
+        },
+        {
+          "text": "How can I configure you?"
+        },
+        {
+          "text": "Tell me something about yourself"
+        },
+        {
+          "text": "Who are you?"
+        },
+        {
+          "text": "Where were you born?"
+        },
+        {
+          "text": "Where are you from?"
+        },
+        {
+          "text": "What languages do you speak?"
+        },
+        {
+          "text": "What's your name?"
+        }
+      ],
+      "description": "Request generic personal attributes."
+    },
+    {
+      "intent": "General_Security_Assurance",
+      "examples": [
+        {
+          "text": "In what way can I tell if my plastic is safe?"
+        },
+        {
+          "text": "What safety measures are used to ensure that chat is secure?"
+        },
+        {
+          "text": "Why would I trust this chat?"
+        },
+        {
+          "text": "Will my conversation remain secured?"
+        },
+        {
+          "text": "Are you safe on hackers?"
+        },
+        {
+          "text": "Are you safe?"
+        },
+        {
+          "text": "Can I be sure that my stored card details are held securely?"
+        },
+        {
+          "text": "Conversation secure?"
+        },
+        {
+          "text": "Customer info secured?"
+        },
+        {
+          "text": "Do you have protection against hacks?"
+        },
+        {
+          "text": "How do I know if my card info is kept safe?"
+        },
+        {
+          "text": "How do I know this chat is not a scam?"
+        },
+        {
+          "text": "How is my credit card info secured?"
+        },
+        {
+          "text": "How safe is my data?"
+        },
+        {
+          "text": "I'd like proof of a secure chat"
+        },
+        {
+          "text": "What makes this chat trustworthy?"
+        },
+        {
+          "text": "What guards do you have in place to protect your customer's data?"
+        },
+        {
+          "text": "Secure conversation?"
+        },
+        {
+          "text": "Protection hacks?"
+        },
+        {
+          "text": "Precautions hackers?"
+        },
+        {
+          "text": "Is this conversation secure?"
+        },
+        {
+          "text": "Is this an official chat?"
+        },
+        {
+          "text": "Is this a trusted chat site?"
+        },
+        {
+          "text": "Is there a reason to distrust this chat?"
+        },
+        {
+          "text": "Is my payment information secure?"
+        },
+        {
+          "text": "Is my card info secure?"
+        }
+      ],
+      "description": "Express concerns about the security of the bot."
+    },
+    {
+      "intent": "Bot_Control_Clarification",
+      "examples": [
+        {
+          "text": "Explains"
+        },
+        {
+          "text": "Come again?"
+        },
+        {
+          "text": "Can you say that again please?"
+        },
+        {
+          "text": "What do you mean?"
+        },
+        {
+          "text": "What do you mean by that?"
+        },
+        {
+          "text": "What are you talking about?"
+        },
+        {
+          "text": "What are you saying?"
+        },
+        {
+          "text": "What are you referring to?"
+        },
+        {
+          "text": "Let's try to say that again more clearly, shall we?"
+        },
+        {
+          "text": "I need more information"
+        },
+        {
+          "text": "I don't understand"
+        },
+        {
+          "text": "I don't understand what you're saying"
+        },
+        {
+          "text": "I don't get it"
+        },
+        {
+          "text": "I didn't understand that properly"
+        },
+        {
+          "text": "I didn't quite understand what you said"
+        },
+        {
+          "text": "I didn't catch that"
+        },
+        {
+          "text": "I did not quite understand what you gave me"
+        }
+      ],
+      "description": "Repeat or clarify last statement."
+    },
+    {
+      "intent": "General_Jokes",
+      "examples": [
+        {
+          "text": "I'm bored"
+        },
+        {
+          "text": "Surprise me with something hilarious"
+        },
+        {
+          "text": "Tell me a joke"
+        },
+        {
+          "text": "What is your favorite joke?"
+        },
+        {
+          "text": "What do you do for fun?"
+        },
+        {
+          "text": "Tell me something funny"
+        },
+        {
+          "text": "Can you tell a joke?"
+        },
+        {
+          "text": "Are there jokes?"
+        },
+        {
+          "text": "Another joke"
+        },
+        {
+          "text": "Can you tell me a joke?"
+        },
+        {
+          "text": "Do you have a joke?"
+        },
+        {
+          "text": "Do you have humor?"
+        },
+        {
+          "text": "Do you like fun?"
+        },
+        {
+          "text": "Do you like humor?"
+        },
+        {
+          "text": "I am getting bored"
+        },
+        {
+          "text": "I want a joke"
+        },
+        {
+          "text": "One more joke"
+        }
+      ],
+      "description": "Request a joke."
+    },
+    {
+      "intent": "Bot_Control_Start_Over",
+      "examples": [
+        {
+          "text": "Let us reopen this again."
+        },
+        {
+          "text": "Let's go back to square one"
+        },
+        {
+          "text": "Let's pick this up from the top again."
+        },
+        {
+          "text": "One more time from the beginning"
+        },
+        {
+          "text": "Please initiate from the beginning"
+        },
+        {
+          "text": "Please reset"
+        },
+        {
+          "text": "Please start a new chat"
+        },
+        {
+          "text": "Restart"
+        },
+        {
+          "text": "Start over"
+        },
+        {
+          "text": "We will need to begin again"
+        },
+        {
+          "text": "We need a do-over"
+        },
+        {
+          "text": "Can we please start over?"
+        },
+        {
+          "text": "Actually, let's start over"
+        },
+        {
+          "text": "Back to the beginning"
+        },
+        {
+          "text": "Back to the top"
+        },
+        {
+          "text": "Begin over!"
+        },
+        {
+          "text": "How can I start over?"
+        },
+        {
+          "text": "I need to reset."
+        },
+        {
+          "text": "I want start from the beginning"
+        },
+        {
+          "text": "I would like to start all over"
+        }
+      ],
+      "description": "Restart bot or current flow."
+    },
+    {
+      "intent": "Bot_Control_Approve_Response",
+      "examples": [
+        {
+          "text": "Sure thing!"
+        },
+        {
+          "text": "Sweet"
+        },
+        {
+          "text": "That is precisely what I was looking for"
+        },
+        {
+          "text": "That is right"
+        },
+        {
+          "text": "That is the proper response."
+        },
+        {
+          "text": "That is what I need"
+        },
+        {
+          "text": "That's exactly what I want"
+        },
+        {
+          "text": "This is alright"
+        },
+        {
+          "text": "Very well. Let's do it."
+        },
+        {
+          "text": "Yeah, that's it!"
+        },
+        {
+          "text": "Yes"
+        },
+        {
+          "text": "You read my mind"
+        },
+        {
+          "text": "Affirmative. That's what I'm looking for."
+        },
+        {
+          "text": "All right"
+        },
+        {
+          "text": "Correct"
+        },
+        {
+          "text": "For sure!"
+        },
+        {
+          "text": "Got it"
+        },
+        {
+          "text": "Great"
+        },
+        {
+          "text": "I agree"
+        },
+        {
+          "text": "I like that"
+        },
+        {
+          "text": "Indeed!"
+        }
+      ],
+      "description": "Acknowledge that the response satisfies a question."
+    },
+    {
+      "intent": "General_Connect_to_Agent",
+      "examples": [
+        {
+          "text": "Can I speak to an advisor?"
+        },
+        {
+          "text": "Can I speak to a live person?"
+        },
+        {
+          "text": "Can I speak to a human please?"
+        },
+        {
+          "text": "Can I connect to an agent?"
+        },
+        {
+          "text": "Call agent"
+        },
+        {
+          "text": "Is there anyone there I can actually talk to for real?"
+        },
+        {
+          "text": "A real agent, please."
+        },
+        {
+          "text": "I want to speak to a person"
+        },
+        {
+          "text": "I want to talk to the manager"
+        },
+        {
+          "text": "talk to a human"
+        },
+        {
+          "text": "I don't want to speak with a robot"
+        },
+        {
+          "text": "get me a person"
+        },
+        {
+          "text": "representative"
+        },
+        {
+          "text": "Yes, take me to a real person"
+        },
+        {
+          "text": "Where is the closest agent?"
+        },
+        {
+          "text": "Agent help"
+        },
+        {
+          "text": "I would like to speak to someone"
+        },
+        {
+          "text": "I would like to speak to a human"
+        },
+        {
+          "text": "I want to talk to a person"
+        },
+        {
+          "text": "I want an agent to help me"
+        },
+        {
+          "text": "I want agent"
+        },
+        {
+          "text": "I want a manager"
+        },
+        {
+          "text": "I need to speak to a representative. How would I go about doing so?"
+        },
+        {
+          "text": "I don't want to talk to you"
+        },
+        {
+          "text": "I don't want to talk to a bot."
+        },
+        {
+          "text": "How can I skip the recorded menu and go straight to a live person?"
+        },
+        {
+          "text": "Hi can you transfer me"
+        },
+        {
+          "text": "Do not want a robot?"
+        },
+        {
+          "text": "Customer service representative please."
+        },
+        {
+          "text": "Could you please transfer me to your master?"
+        },
+        {
+          "text": "Contact person"
+        },
+        {
+          "text": "Connect me to a live operator please."
+        },
+        {
+          "text": "Can you connect me with a real person?"
+        },
+        {
+          "text": "Can you assist me to connect to an agent?"
+        },
+        {
+          "text": "Can I talk to someone?"
+        },
+        {
+          "text": "Can I speak with somebody?"
+        },
+        {
+          "text": "I want to speak to a human"
+        },
+        {
+          "text": "call the manager"
+        },
+        {
+          "text": "I dont want to talk to a computer"
+        },
+        {
+          "text": "Send me to an agent"
+        },
+        {
+          "text": "Put me through to someone"
+        },
+        {
+          "text": "Pls connect"
+        },
+        {
+          "text": "Please let me talk to a human being."
+        },
+        {
+          "text": "Please connect me to a live agent"
+        },
+        {
+          "text": "Please assist me to get to an agent"
+        },
+        {
+          "text": "Operator please"
+        },
+        {
+          "text": "Need help from human"
+        }
+      ],
+      "description": "Request a human agent."
+    },
+    {
+      "intent": "General_Positive_Feedback",
+      "examples": [
+        {
+          "text": "Thank you"
+        },
+        {
+          "text": "Ok thank you"
+        },
+        {
+          "text": "Love your work"
+        },
+        {
+          "text": "I'm looking forward to working with you again! :)"
+        },
+        {
+          "text": "I like what you did there! :)"
+        },
+        {
+          "text": "You are awesome"
+        },
+        {
+          "text": "You are great"
+        },
+        {
+          "text": "This is so cool"
+        },
+        {
+          "text": "How cool is this?"
+        },
+        {
+          "text": "Can't believe you are that good"
+        },
+        {
+          "text": "Brilliant!"
+        },
+        {
+          "text": "You've been so helpful :)"
+        },
+        {
+          "text": "You're a genius!"
+        },
+        {
+          "text": "You the man"
+        },
+        {
+          "text": "You gave me exactly what I need!"
+        },
+        {
+          "text": "You are wonderful"
+        },
+        {
+          "text": "You are the best"
+        },
+        {
+          "text": "This is great"
+        },
+        {
+          "text": "This is good"
+        }
+      ],
+      "description": "Express positive sentiment or gratitude."
+    },
+    {
+      "intent": "Bot_Control_Change_Subject",
+      "examples": [
+        {
+          "text": "Help me with this other question"
+        },
+        {
+          "text": "Let us talk about something else"
+        },
+        {
+          "text": "Talk about something else"
+        },
+        {
+          "text": "A different matter"
+        },
+        {
+          "text": "Discuss something else"
+        },
+        {
+          "text": "Another thing"
+        },
+        {
+          "text": "Can we talk about something else?"
+        },
+        {
+          "text": "Change topic"
+        },
+        {
+          "text": "Chat about something else"
+        },
+        {
+          "text": "Here is another issue"
+        },
+        {
+          "text": "I have one more question"
+        },
+        {
+          "text": "Let us change the topic"
+        }
+      ],
+      "description": "Change to a different topic."
+    },
+    {
+      "intent": "General_Human_or_Bot",
+      "examples": [
+        {
+          "text": "Tell me, are you a human or no?"
+        },
+        {
+          "text": "Am I talking to a person or am I talking to an AI?"
+        },
+        {
+          "text": "Am I talking to Watson?"
+        },
+        {
+          "text": "Am I chatting with a human?"
+        },
+        {
+          "text": "Am I talking to a Bot?"
+        },
+        {
+          "text": "Are you a robot?"
+        },
+        {
+          "text": "Are you even real?"
+        },
+        {
+          "text": "Are you a human or a bot?"
+        },
+        {
+          "text": "Are you human?"
+        },
+        {
+          "text": "Are you real?"
+        },
+        {
+          "text": "How can you prove you are a human?"
+        },
+        {
+          "text": "Is this a computer?"
+        }
+      ],
+      "description": "Ask if speaking to a human or a bot."
+    },
+    {
+      "intent": "General_Agent_Capabilities",
+      "examples": [
+        {
+          "text": "How can you solve my problems?"
+        },
+        {
+          "text": "What are you capable of?"
+        },
+        {
+          "text": "How do I use you?"
+        },
+        {
+          "text": "I do not know what to ask"
+        },
+        {
+          "text": "Can you please give me a list of the types of things you can help me with?"
+        },
+        {
+          "text": "Can you tell me what services you are able to help me with?"
+        },
+        {
+          "text": "Do you have a list of things I can talk to you about?"
+        },
+        {
+          "text": "Help now"
+        },
+        {
+          "text": "Hi, what do you do?"
+        },
+        {
+          "text": "How can I use you?"
+        },
+        {
+          "text": "How can you help me?"
+        },
+        {
+          "text": "I'd like to know what type of questions you can answer for me."
+        },
+        {
+          "text": "Is there anything you can help me with?"
+        },
+        {
+          "text": "Where can I find the frequently asked questions?"
+        },
+        {
+          "text": "What kinds of things can you do?"
+        },
+        {
+          "text": "What is this 4?"
+        },
+        {
+          "text": "What features are in here?"
+        },
+        {
+          "text": "What else can you help me with?"
+        },
+        {
+          "text": "What do you handle?"
+        },
+        {
+          "text": "What do you do?"
+        },
+        {
+          "text": "What can I ask you to do?"
+        },
+        {
+          "text": "What are your skills?"
+        },
+        {
+          "text": "What are you used for?"
+        },
+        {
+          "text": "What are you good at?"
+        },
+        {
+          "text": "What are you able to understand?"
+        },
+        {
+          "text": "What are you able to deal with?"
+        },
+        {
+          "text": "What are my options?"
+        },
+        {
+          "text": "What are my options that you can help with?"
+        },
+        {
+          "text": "Tell me something"
+        },
+        {
+          "text": "Tell me about what kind of things you do?"
+        }
+      ],
+      "description": "Request capabilities of the bot."
+    },
+    {
+      "intent": "General_Negative_Feedback",
+      "examples": [
+        {
+          "text": "You're really frustrating"
+        },
+        {
+          "text": "You're really irritating"
+        },
+        {
+          "text": "You are on my nerves"
+        },
+        {
+          "text": "You are having delusions"
+        },
+        {
+          "text": "Why are you stupid?"
+        },
+        {
+          "text": "Why are you so annoying?"
+        },
+        {
+          "text": "Stupid"
+        },
+        {
+          "text": "Robots are stupid"
+        },
+        {
+          "text": "Robots are boring"
+        },
+        {
+          "text": "Quit annoying me"
+        },
+        {
+          "text": "I hate this!"
+        },
+        {
+          "text": "I do not like you"
+        },
+        {
+          "text": "You're too stupid"
+        },
+        {
+          "text": "You are very frustrating"
+        },
+        {
+          "text": "I hate you"
+        },
+        {
+          "text": "It is annoying"
+        },
+        {
+          "text": "Do not like you?"
+        },
+        {
+          "text": "Everyone hates you"
+        },
+        {
+          "text": "Hate you"
+        },
+        {
+          "text": "You do not seem smart"
+        }
+      ],
+      "description": "Express unfavorable feedback."
+    },
+    {
+      "intent": "General_Greetings",
+      "examples": [
+        {
+          "text": "Good morning"
+        },
+        {
+          "text": "Good evening"
+        },
+        {
+          "text": "Good day"
+        },
+        {
+          "text": "Looking good eve"
+        },
+        {
+          "text": "How r u?"
+        },
+        {
+          "text": "How is it going?"
+        },
+        {
+          "text": "How have you been?"
+        },
+        {
+          "text": "How are you today?"
+        },
+        {
+          "text": "How are things going?"
+        },
+        {
+          "text": "Hi there"
+        },
+        {
+          "text": "Hi advisor"
+        },
+        {
+          "text": "Hey there"
+        },
+        {
+          "text": "Hey twin"
+        },
+        {
+          "text": "Hey you"
+        },
+        {
+          "text": "hi"
+        },
+        {
+          "text": "Ok take me back"
+        },
+        {
+          "text": "What's new?"
+        },
+        {
+          "text": "What's up?"
+        },
+        {
+          "text": "Who is this?"
+        },
+        {
+          "text": "You there"
+        },
+        {
+          "text": "hiya"
+        },
+        {
+          "text": "yo"
+        },
+        {
+          "text": "Hey there all"
+        },
+        {
+          "text": "Hey how are you doing"
+        },
+        {
+          "text": "Hello"
+        },
+        {
+          "text": "Hello I am looking for some help here"
+        },
+        {
+          "text": "Hello Agent"
+        },
+        {
+          "text": "Have you been well?"
+        },
+        {
+          "text": "Greetings"
+        },
+        {
+          "text": "Good to see you"
+        }
+      ],
+      "description": "Greet the bot."
+    },
+    {
+      "intent": "Cancel",
+      "examples": [
+        {
+          "text": "i changed my mind"
+        },
+        {
+          "text": "cancel the request"
+        },
+        {
+          "text": "cancel that"
+        },
+        {
+          "text": "never mind"
+        },
+        {
+          "text": "forget it"
+        },
+        {
+          "text": "nevermind"
+        },
+        {
+          "text": "i don't want a table anymore anymore"
+        }
+      ]
+    },
+    {
+      "intent": "Help",
+      "examples": [
+        {
+          "text": "can you assist me"
+        },
+        {
+          "text": "can you help"
+        },
+        {
+          "text": "help"
+        },
+        {
+          "text": "help me decide"
+        },
+        {
+          "text": "help me"
+        },
+        {
+          "text": "what can i do"
+        },
+        {
+          "text": "i need assistance"
+        },
+        {
+          "text": "what can i say"
+        }
+      ]
+    },
+    {
+      "intent": "Bot_Control_Reject_Response",
+      "examples": [
+        {
+          "text": "That answer is incorrect"
+        },
+        {
+          "text": "I disagree"
+        },
+        {
+          "text": "I do not think it is the answer?"
+        },
+        {
+          "text": "I don't need that"
+        },
+        {
+          "text": "I don't want that"
+        },
+        {
+          "text": "It is not what I want"
+        },
+        {
+          "text": "I wasn't looking for that"
+        },
+        {
+          "text": "It is not what I was looking for"
+        },
+        {
+          "text": "No I'm fine thanks"
+        },
+        {
+          "text": "No"
+        },
+        {
+          "text": "Not the right response"
+        },
+        {
+          "text": "Bad response"
+        },
+        {
+          "text": "You're misunderstanding me"
+        },
+        {
+          "text": "You didn't understand me"
+        },
+        {
+          "text": "You did not understand what I said"
+        },
+        {
+          "text": "You did not understand what I asked"
+        },
+        {
+          "text": "Wrong response"
+        },
+        {
+          "text": "That was wrong, try again"
+        },
+        {
+          "text": "That was not my intent"
+        },
+        {
+          "text": "That sounds like the wrong response"
+        },
+        {
+          "text": "That is not true"
+        }
+      ],
+      "description": "Indicate the bot's response does not address a question."
+    },
+    {
+      "intent": "Bot_Control_Ignore_Undo",
+      "examples": [
+        {
+          "text": "Not yet"
+        },
+        {
+          "text": "Let us redo that again!"
+        },
+        {
+          "text": "It's not what I mean"
+        },
+        {
+          "text": "Ignore this"
+        },
+        {
+          "text": "Nothing"
+        },
+        {
+          "text": "I didn't mean to do that actually, let's go back"
+        },
+        {
+          "text": "I did not mean that?"
+        },
+        {
+          "text": "I change my mind."
+        },
+        {
+          "text": "Hold on! I think I want to do it differently."
+        },
+        {
+          "text": "Cancel"
+        },
+        {
+          "text": "Actually, I take that back"
+        },
+        {
+          "text": "Never mind"
+        },
+        {
+          "text": "Wait! Let's back up few steps and do that again"
+        },
+        {
+          "text": "Never"
+        }
+      ],
+      "description": "Ask the bot to take one step back."
+    },
+    {
+      "intent": "General_Ending",
+      "examples": [
+        {
+          "text": "See you later"
+        },
+        {
+          "text": "Cya later"
+        },
+        {
+          "text": "Ending this session"
+        },
+        {
+          "text": "Finished now, good bye"
+        },
+        {
+          "text": "Get lost"
+        },
+        {
+          "text": "Going now"
+        },
+        {
+          "text": "Ok goodbye"
+        },
+        {
+          "text": "Good. bye."
+        },
+        {
+          "text": "It was nice chatting with you"
+        },
+        {
+          "text": "I'm leaving now"
+        },
+        {
+          "text": "Im good thank you"
+        },
+        {
+          "text": "Im done"
+        },
+        {
+          "text": "I'm done"
+        },
+        {
+          "text": "I want to quit"
+        },
+        {
+          "text": "I d like to stop doing this"
+        },
+        {
+          "text": "I have got to go"
+        },
+        {
+          "text": "End trial"
+        },
+        {
+          "text": "Goodbye"
+        },
+        {
+          "text": "Have a nice day?"
+        },
+        {
+          "text": "Go away"
+        },
+        {
+          "text": "Go off"
+        },
+        {
+          "text": "Bye bye"
+        },
+        {
+          "text": "Bye now"
+        },
+        {
+          "text": "Catch you later"
+        },
+        {
+          "text": "Hey bot go away"
+        },
+        {
+          "text": "I am leaving"
+        },
+        {
+          "text": "I am out of here"
+        },
+        {
+          "text": "Time to go"
+        },
+        {
+          "text": "That's everything"
+        },
+        {
+          "text": "That is all"
+        },
+        {
+          "text": "Thanks very much, bye!"
+        },
+        {
+          "text": "Thanks, bye!"
+        },
+        {
+          "text": "Thank you for your time"
+        },
+        {
+          "text": "Stop talking to me"
+        },
+        {
+          "text": "Stop doing this"
+        },
+        {
+          "text": "Shut up"
+        },
+        {
+          "text": "See you"
+        }
+      ],
+      "description": "End the conversation."
+    },
+    {
+      "intent": "Bot_Control_Confirm_Presence",
+      "examples": [
+        {
+          "text": "Where'd you go?"
+        },
+        {
+          "text": "Have I lost you?"
+        },
+        {
+          "text": "Am I talking to someone?"
+        },
+        {
+          "text": "Anyone there?"
+        },
+        {
+          "text": "Are you leaving me?"
+        },
+        {
+          "text": "Are you on?"
+        },
+        {
+          "text": "Are you still around?"
+        },
+        {
+          "text": "Are you still here with me?"
+        },
+        {
+          "text": "Are you there?"
+        },
+        {
+          "text": "Did you go somewhere?"
+        },
+        {
+          "text": "Did you hear what I said?"
+        },
+        {
+          "text": "I am still holding"
+        },
+        {
+          "text": "Is anybody here?"
+        },
+        {
+          "text": "Is anybody home?"
+        },
+        {
+          "text": "Speak to me if you are there."
+        },
+        {
+          "text": "You around?"
+        }
+      ],
+      "description": "Ask the bot to indicate that it is available."
+    },
+    {
+      "intent": "Bot_Control_Standby",
+      "examples": [
+        {
+          "text": "Just a sec"
+        },
+        {
+          "text": "Just hold on"
+        },
+        {
+          "text": "Out for a break"
+        },
+        {
+          "text": "Need a minute here"
+        },
+        {
+          "text": "Let me see"
+        },
+        {
+          "text": "Keep holding"
+        },
+        {
+          "text": "Wait"
+        },
+        {
+          "text": "Back again soon"
+        },
+        {
+          "text": "Be back later"
+        },
+        {
+          "text": "Be patient with me"
+        },
+        {
+          "text": "Can you give me a moment?"
+        },
+        {
+          "text": "Can you wait for me?"
+        },
+        {
+          "text": "Give me a few minutes to get together"
+        },
+        {
+          "text": "Give me a moment"
+        },
+        {
+          "text": "Give me a second"
+        },
+        {
+          "text": "Hold on"
+        },
+        {
+          "text": "I want stop a moment"
+        },
+        {
+          "text": "I will be back"
+        },
+        {
+          "text": "I would like to put you on hold"
+        },
+        {
+          "text": "In a moment"
+        }
+      ],
+      "description": "Indicate a delay in providing input to the bot."
+    },
+    {
+      "intent": "Thanks",
+      "examples": [
+        {
+          "text": "thank you very much"
+        },
+        {
+          "text": "thx"
+        },
+        {
+          "text": "i appreciate it"
+        },
+        {
+          "text": "thank you"
+        },
+        {
+          "text": "thanks"
+        },
+        {
+          "text": "much appreciated"
+        },
+        {
+          "text": "many thanks"
+        },
+        {
+          "text": "that's nice of you"
+        }
+      ]
+    },
+    {
+      "intent": "Goodbye",
+      "examples": [
+        {
+          "text": "good bye"
+        },
+        {
+          "text": "so long"
+        },
+        {
+          "text": "ciao"
+        },
+        {
+          "text": "arrivederci"
+        },
+        {
+          "text": "bye"
+        },
+        {
+          "text": "see ya"
+        }
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "entity": "sys-number",
+      "values": []
+    },
+    {
+      "entity": "address",
+      "values": [
+        {
+          "type": "patterns",
+          "value": "postcode",
+          "patterns": [
+            "([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})",
+            "(\\b|\\s)\\d{5}(\\b|\\s)"
+          ]
+        },
+        {
+          "type": "patterns",
+          "value": "country",
+          "patterns": [
+            "(UK)",
+            "(US)"
+          ]
+        }
+      ],
+      "fuzzy_match": false
+    },
+    {
+      "entity": "sys-percentage",
+      "values": []
+    },
+    {
+      "entity": "sys-time",
+      "values": []
+    },
+    {
+      "entity": "sys-currency",
+      "values": []
+    },
+    {
+      "entity": "sys-date",
+      "values": []
+    },
+    {
+      "entity": "name",
+      "values": [
+        {
+          "type": "patterns",
+          "value": "name",
+          "patterns": [
+            "^[a-zA-Z]+ [a-zA-Z]+$"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "reply",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "yes",
+          "synonyms": [
+            "yep",
+            "you betcha",
+            "you bet",
+            "yes",
+            "yeah",
+            "why not",
+            "sure",
+            "please",
+            "ok",
+            "let's do it",
+            "go for it",
+            "definitely"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "no",
+          "synonyms": [
+            "not now",
+            "not at this time",
+            "nope",
+            "i think not",
+            "dont think so",
+            "don't think so",
+            "definitely not"
+          ]
+        }
+      ]
+    },
+    {
+      "entity": "image",
+      "values": [
+        {
+          "type": "patterns",
+          "value": "imagebase64",
+          "patterns": [
+            "^@[a-zA-Z0-9+/]+={,2}$"
+          ]
+        },
+        {
+          "type": "patterns",
+          "value": "imageurl",
+          "patterns": [
+            "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+            "(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "file: upload successful",
+          "synonyms": []
+        },
+        {
+          "type": "patterns",
+          "value": "description",
+          "patterns": [
+            "(class:)",
+            "(Claimable Value:)"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    }
+  ],
+  "metadata": {
+    "api_version": {
+      "major_version": "v2",
+      "minor_version": "2018-11-08"
+    },
+    "from-sample": true
+  },
+  "webhooks": [
+    {
+      "url": "https://ag.icp-proxy.agdemo2-252622168ef3ca91d0666944581f016f-0000.us-south.containers.appdomain.cloud/demoorg/democatalog/chatbot",
+      "name": "main_webhook",
+      "headers": [
+        {
+          "name": "X-IBM-Client-Id",
+          "value": "dbf853fe-3ea6-45f0-bebe-dac35ccba68f"
+        }
+      ]
+    }
+  ],
+  "dialog_nodes": [
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "$webhook_result.customerResponseMsg"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_4_1591364786627",
+      "context": {
+        "stormvalidation": false
+      },
+      "conditions": "$webhook_result.stormPath == false",
+      "dialog_node": "response_2_1591892402103",
+      "previous_sibling": "response_9_1591623155484"
+    },
+    {
+      "type": "frame",
+      "title": "Upload images via link",
+      "parent": "node_4_1591364786627",
+      "actions": [
+        {
+          "name": "main_webhook",
+          "type": "webhook",
+          "parameters": {
+            "apiName": "classifyImages",
+            "image_url": "$imageurl",
+            "image_name": "damage",
+            "incident_id": "$claimNumber"
+          },
+          "result_variable": "webhook_result_1"
+        }
+      ],
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "conditions": "$stormvalidation",
+      "dialog_node": "node_3_1592234884092",
+      "previous_sibling": "handler_1_1591551317828"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "We cannot validate storm data at the moment. "
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_4_1591364786627",
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "body",
+        "dialog_node": "node_10_1595428594442"
+      },
+      "conditions": "output.webhook_error",
+      "dialog_node": "response_9_1593443529770",
+      "previous_sibling": "response_2_1591892402103"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "I see you need help. Let me transfer you to an agent..."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "node_4_1591364786627",
+      "context": {
+        "date": null,
+        "name": null,
+        "country": null,
+        "postcode": null,
+        "user_needs_help": true
+      },
+      "next_step": {
+        "behavior": "skip_all_slots"
+      },
+      "conditions": "#Help",
+      "event_name": "generic",
+      "dialog_node": "handler_1_1591551317828",
+      "previous_sibling": "handler_2_1591551307354"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "$webhook_result.customerResponseMsg"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_4_1591364786627",
+      "context": {
+        "claimNumber": "$webhook_result.claimNumber",
+        "stormvalidation": true
+      },
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "condition",
+        "dialog_node": "node_2_1594052207332"
+      },
+      "conditions": "$webhook_result.stormPath == true",
+      "dialog_node": "response_9_1591623155484",
+      "previous_sibling": "response_6_1591607436195"
+    },
+    {
+      "type": "slot",
+      "output": {},
+      "parent": "node_4_1591364786627",
+      "variable": "$date",
+      "conditions": "true",
+      "dialog_node": "slot_5_1591365565535",
+      "previous_sibling": "slot_7_1592485781833"
+    },
+    {
+      "type": "response_condition",
+      "parent": "node_4_1591364786627",
+      "conditions": "anything_else",
+      "dialog_node": "response_7_1591365566061",
+      "previous_sibling": "response_1_1591365565288"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "The application returned. \nclaim number: \"$webhook_result.claimNumber\" \nmessage: \"$webhook_result.customerResponseMsg\" \nname: \"$webhook_result.name\"\ndate: \"$webhook_result.date\"\nstormPath: \"$webhook_result.stormPath\""
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_4_1591364786627",
+      "context": {
+        "stormvalidation": "$webhook_result.stormPath"
+      },
+      "conditions": "$webhook_result",
+      "dialog_node": "response_1_1591365565288",
+      "previous_sibling": "response_9_1593443529770"
+    },
+    {
+      "type": "frame",
+      "title": "Upload images",
+      "parent": "node_4_1591364786627",
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "user_input",
+        "dialog_node": "node_1_1594133753523"
+      },
+      "conditions": "$stormvalidation",
+      "dialog_node": "node_2_1594052207332",
+      "previous_sibling": "node_3_1592234884092"
+    },
+    {
+      "type": "slot",
+      "parent": "node_4_1591364786627",
+      "variable": "$country",
+      "dialog_node": "slot_8_1592231239328",
+      "previous_sibling": "slot_5_1591365565535"
+    },
+    {
+      "type": "standard",
+      "title": "Claim Details",
+      "parent": "node_4_1591364786627",
+      "actions": [
+        {
+          "name": "main_webhook",
+          "type": "webhook",
+          "parameters": {
+            "apiName": "summary",
+            "incidentId": "$claimNumber"
+          },
+          "result_variable": "webhook_result_2"
+        }
+      ],
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "conditions": "@image:description",
+      "dialog_node": "node_2_1592918993180",
+      "previous_sibling": "node_2_1594052207332"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Let me know how else I can help"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_4_1591364786627",
+      "conditions": "$user_needs_help",
+      "dialog_node": "response_6_1591607436195",
+      "previous_sibling": "response_9_1591460127502"
+    },
+    {
+      "type": "slot",
+      "output": {},
+      "parent": "node_4_1591364786627",
+      "variable": "$name",
+      "dialog_node": "slot_7_1592485781833",
+      "previous_sibling": "node_2_1592918993180"
+    },
+    {
+      "type": "slot",
+      "parent": "node_4_1591364786627",
+      "variable": "$postcode",
+      "dialog_node": "slot_9_1591366868656",
+      "previous_sibling": "slot_8_1592231239328"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Let me know how else I can help"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_4_1591364786627",
+      "conditions": "$user_cancelled",
+      "dialog_node": "response_9_1591460127502",
+      "previous_sibling": "slot_9_1591366868656"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "OK. Canceling your request..."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "node_4_1591364786627",
+      "context": {
+        "date": null,
+        "name": null,
+        "country": null,
+        "postcode": null,
+        "user_cancelled": true
+      },
+      "next_step": {
+        "behavior": "skip_all_slots"
+      },
+      "conditions": "#Cancel",
+      "event_name": "generic",
+      "dialog_node": "handler_2_1591551307354"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "All right, let me know if I can help with anything else."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_10_1595428594442",
+      "conditions": "@reply:no",
+      "dialog_node": "node_1_1595428808913",
+      "previous_sibling": "node_4_1595428800045"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "All right, I am checking again..."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_10_1595428594442",
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "body",
+        "dialog_node": "node_4_1591364786627"
+      },
+      "conditions": "@reply:yes",
+      "dialog_node": "node_4_1595428800045"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "Please Enter images of the damage."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_1_1592236630196",
+      "event_name": "focus",
+      "dialog_node": "handler_1_1592236630208",
+      "previous_sibling": "handler_5_1592236630208"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_1_1592236630196",
+      "context": {
+        "imageurl": "@image.literal"
+      },
+      "conditions": "@image.literal",
+      "event_name": "input",
+      "dialog_node": "handler_5_1592236630208"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Please enter your name and surname."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_7_1592485781833",
+      "event_name": "focus",
+      "dialog_node": "handler_9_1592485781838",
+      "previous_sibling": "handler_1_1592485781837"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_7_1592485781833",
+      "context": {
+        "name": "@name.literal"
+      },
+      "conditions": "@name.literal",
+      "event_name": "input",
+      "dialog_node": "handler_1_1592485781837"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "Hello, Welcome to Storm Insurance Inc. I can help you make a storm damage claim."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_4_1594213711138",
+      "event_name": "focus",
+      "dialog_node": "handler_7_1594213711151",
+      "previous_sibling": "handler_4_1594213711151"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "ok cancelling"
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_4_1594213711138",
+      "conditions": "#Cancel",
+      "event_name": "nomatch",
+      "dialog_node": "handler_8_1594214231041",
+      "previous_sibling": "handler_7_1594213711151"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_4_1594213711138",
+      "context": {
+        "Bot_Control_Approve_Response": "#Bot_Control_Approve_Response"
+      },
+      "conditions": "#Bot_Control_Approve_Response",
+      "event_name": "input",
+      "dialog_node": "handler_4_1594213711151"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "title": "We determined that this is a picture of a \"$webhook_result_1.most_valuable_class.class\".",
+            "source": "$imageurl",
+            "response_type": "image"
+          },
+          {
+            "values": [
+              {
+                "text": "The maximum you can claim for this item is \"$webhook_result_1.most_valuable_class.value\" and your score is \"$webhook_result_1.most_valuable_class.score\"."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1592234884092",
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "condition",
+        "dialog_node": "node_2_1592918993180"
+      },
+      "conditions": "$webhook_result_1",
+      "dialog_node": "response_1_1592236549923",
+      "previous_sibling": "response_1_1592490597345"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Let me know how else I can help"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1592234884092",
+      "conditions": "$user_cancelled",
+      "dialog_node": "response_3_1592490589890",
+      "previous_sibling": "slot_1_1592236630196"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "We cannot analyse your images at the moment. Please try later."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1592234884092",
+      "conditions": "output.webhook_error",
+      "dialog_node": "response_4_1593443358738",
+      "previous_sibling": "response_1_1592236549923"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Let me know how else I can help"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1592234884092",
+      "conditions": "$user_needs_help",
+      "dialog_node": "response_1_1592490597345",
+      "previous_sibling": "response_3_1592490589890"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "I see you need help. Let me transfer you to an agent..."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "node_3_1592234884092",
+      "context": {
+        "user_needs_help": true
+      },
+      "next_step": {
+        "behavior": "skip_all_slots"
+      },
+      "conditions": "#Help",
+      "event_name": "generic",
+      "dialog_node": "handler_2_1592490014557",
+      "previous_sibling": "handler_7_1592490006281"
+    },
+    {
+      "type": "slot",
+      "output": {},
+      "parent": "node_3_1592234884092",
+      "variable": "$imageurl",
+      "dialog_node": "slot_1_1592236630196",
+      "previous_sibling": "handler_1_1592236629593"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": []
+      },
+      "parent": "node_3_1592234884092",
+      "disabled": true,
+      "event_name": "focus",
+      "dialog_node": "handler_1_1592236629593",
+      "previous_sibling": "handler_2_1592490014557"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "OK. Canceling your request..."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "node_3_1592234884092",
+      "context": {
+        "user_cancelled": true
+      },
+      "next_step": {
+        "behavior": "skip_all_slots"
+      },
+      "conditions": "#Cancel",
+      "event_name": "generic",
+      "dialog_node": "handler_7_1592490006281"
+    },
+    {
+      "type": "response_condition",
+      "parent": "node_5_1591460753724",
+      "conditions": "anything_else",
+      "dialog_node": "response_10_1591633826146",
+      "previous_sibling": "response_7_1591633825227"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Would you like me to transfer you to a representative? "
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_5_1591460753724",
+      "dialog_node": "response_7_1591633825227"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "Ok we are cancelling your request"
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_5_1591365565535",
+      "next_step": {
+        "behavior": "skip_all_slots"
+      },
+      "conditions": "#Cancel",
+      "event_name": "filled",
+      "dialog_node": "handler_6_1592989769859",
+      "previous_sibling": "handler_8_1592322396403"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "You can only claim damage for the last 16 months."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_5_1591365565535",
+      "next_step": {
+        "behavior": "reprompt"
+      },
+      "conditions": "@sys-date.before(today().minusMonths(16))",
+      "event_name": "filled",
+      "dialog_node": "handler_1_1592322294082",
+      "previous_sibling": "handler_8_1591365565544"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "$date it is"
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_5_1591365565535",
+      "conditions": "true",
+      "event_name": "filled",
+      "dialog_node": "handler_8_1592322396403",
+      "previous_sibling": "handler_1_1592322294082"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "What date did the storm damage happen?"
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_5_1591365565535",
+      "context": {},
+      "event_name": "focus",
+      "dialog_node": "handler_8_1591365565544",
+      "previous_sibling": "handler_10_1591365565544"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_5_1591365565535",
+      "context": {
+        "date": "@sys-date"
+      },
+      "conditions": "@sys-date",
+      "event_name": "input",
+      "dialog_node": "handler_10_1591365565544"
+    },
+    {
+      "type": "slot",
+      "output": {},
+      "parent": "node_2_1594052207332",
+      "variable": "$image",
+      "dialog_node": "slot_1_1594130331838",
+      "previous_sibling": "node_1_1594133753523"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Thank you. Watson is analysing the image you have uploaded. Please wait."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_2_1594052207332",
+      "conditions": "@image:(file: upload successful)",
+      "dialog_node": "response_7_1594130331237",
+      "previous_sibling": "slot_1_1594130331838"
+    },
+    {
+      "type": "standard",
+      "title": "Image Results",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "The result of the analysis is, <? input.text ?>."
+              },
+              {
+                "text": "\"We determined that this is a picture of a <category>. The maximum you can claim for this item is <value>\""
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_2_1594052207332",
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "body",
+        "dialog_node": "node_2_1592918993180"
+      },
+      "conditions": "@image:description",
+      "dialog_node": "node_1_1594133753523"
+    },
+    {
+      "type": "slot",
+      "output": {},
+      "parent": "Welcome",
+      "variable": "$Bot_Control_Approve_Response",
+      "dialog_node": "slot_4_1594213711138",
+      "previous_sibling": "node_10_1594214808616"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "All right, let's proceed with your claim. ."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "Welcome",
+      "disabled": true,
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "body",
+        "dialog_node": "node_4_1591364786627"
+      },
+      "conditions": "$Bot_Control_Approve_Response",
+      "dialog_node": "response_3_1592227888488",
+      "previous_sibling": "slot_4_1594213711138"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "All right, let me know if I can help with anything else."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "Welcome",
+      "conditions": "@reply:no",
+      "dialog_node": "node_10_1594214808616",
+      "previous_sibling": "node_10_1594214782145"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "All right, let's proceed with your claim..."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "Welcome",
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "body",
+        "dialog_node": "node_4_1591364786627"
+      },
+      "conditions": "@reply:yes",
+      "dialog_node": "node_10_1594214782145"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "We cannot show the details of your provisional claim at the moment. Please try later. "
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_2_1592918993180",
+      "conditions": "output.webhook_error",
+      "dialog_node": "response_10_1593443571554",
+      "previous_sibling": "response_8_1592919862933"
+    },
+    {
+      "type": "response_condition",
+      "parent": "node_2_1592918993180",
+      "conditions": "anything_else",
+      "dialog_node": "response_4_1592919865197",
+      "previous_sibling": "response_10_1593443571554"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Your claim has been marked as provisionally approved, here is a summary:"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "multiline"
+          },
+          {
+            "values": [
+              {
+                "text": "Claim number, \"$webhook_result_2.incidentNumber\"."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          },
+          {
+            "values": [
+              {
+                "text": "Date, \"$webhook_result_2.summary.claimDate\". "
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          },
+          {
+            "values": [
+              {
+                "text": "Location, \"$webhook_result_2.summary.claimLocation\"."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          },
+          {
+            "values": [
+              {
+                "text": "Weather (e.g. wind speed), \"$webhook_result_2.summary.windSpeed\"."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_2_1592918993180",
+      "context": {
+        "date": null,
+        "name": null,
+        "image": null,
+        "country": null,
+        "postcode": null,
+        "claimNumber": null,
+        "stormvalidation": null
+      },
+      "conditions": "$webhook_result_2",
+      "dialog_node": "response_8_1592919862933"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "Please enter the country where you live."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_8_1592231239328",
+      "event_name": "focus",
+      "dialog_node": "handler_8_1592231239333",
+      "previous_sibling": "handler_10_1592231239333"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_8_1592231239328",
+      "context": {
+        "country": "@address.literal"
+      },
+      "conditions": "@address.literal",
+      "event_name": "input",
+      "dialog_node": "handler_10_1592231239333"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "Please upload images of the damage.."
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_1_1594130331838",
+      "event_name": "focus",
+      "dialog_node": "handler_6_1594130331852",
+      "previous_sibling": "handler_2_1594130331852"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_1_1594130331838",
+      "context": {
+        "image": "@image"
+      },
+      "conditions": "@image",
+      "event_name": "input",
+      "dialog_node": "handler_2_1594130331852"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "text": {
+          "values": [
+            "Please enter your postcode"
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "parent": "slot_9_1591366868656",
+      "event_name": "focus",
+      "dialog_node": "handler_4_1591366868658",
+      "previous_sibling": "handler_3_1591366868658"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_9_1591366868656",
+      "context": {
+        "postcode": "@address.literal"
+      },
+      "conditions": "@address.literal",
+      "event_name": "input",
+      "dialog_node": "handler_3_1591366868658"
+    },
+    {
+      "type": "standard",
+      "title": "Please transfer me to an agent",
+      "metadata": {
+        "callout": {
+          "name": "main_webhook",
+          "type": "webhook",
+          "parameters": {
+            "": ""
+          },
+          "result_variable": "webhook_result_1"
+        },
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "conditions": "#General_Connect_to_Agent",
+      "digress_in": "does_not_return",
+      "dialog_node": "node_5_1591460753724",
+      "previous_sibling": "node_4_1591364786627"
+    },
+    {
+      "type": "standard",
+      "title": "What can I do",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I can tell you about our insurance products and help you make a storm damage claim."
+              },
+              {
+                "text": "You could also ask me to connect you to an agent."
+              },
+              {
+                "text": ""
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "#Help",
+      "dialog_node": "node_2_1591460255610",
+      "previous_sibling": "node_10_1595428594442"
+    },
+    {
+      "type": "standard",
+      "title": "Anything else",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I didn't understand. You can try rephrasing."
+              },
+              {
+                "text": "Can you reword your statement? I'm not understanding."
+              },
+              {
+                "text": "I didn't get your meaning."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "anything_else",
+      "dialog_node": "Anything else",
+      "previous_sibling": "node_6_1592920581005",
+      "disambiguation_opt_out": true
+    },
+    {
+      "type": "frame",
+      "title": "I want to file a claim for storm insurance.",
+      "actions": [
+        {
+          "name": "main_webhook",
+          "type": "webhook",
+          "parameters": {
+            "date": "$date",
+            "name": "$name",
+            "apiName": "stormpath",
+            "postCode": "$postcode:$country"
+          },
+          "result_variable": "webhook_result"
+        }
+      ],
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "conditions": "#Insurance_File_Claim",
+      "dialog_node": "node_4_1591364786627",
+      "previous_sibling": "node_2_1591460255610"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "You're welcome. Just let me know if you need anything else",
+            "No problem. Just let me know if you need anything else",
+            "My pleasure. Just let me know if you need anything else"
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "conditions": "#Thanks",
+      "digress_in": "does_not_return",
+      "dialog_node": "node_6_1592920581005",
+      "previous_sibling": "node_2_1592920843306"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "text": {
+          "values": [
+            "So long",
+            "See ya",
+            "Good bye"
+          ],
+          "selection_policy": "sequential"
+        }
+      },
+      "conditions": "#Goodbye",
+      "digress_in": "does_not_return",
+      "dialog_node": "node_2_1592920843306",
+      "previous_sibling": "node_5_1591460753724"
+    },
+    {
+      "type": "standard",
+      "title": "Try again",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Please make sure you have a valid insurance policy with us. Would you like to try filing a claim again?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "output.webhook_error",
+      "dialog_node": "node_10_1595428594442",
+      "previous_sibling": "Welcome"
+    },
+    {
+      "type": "standard",
+      "title": "Welcome",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Hello, Welcome to Storm Insurance Inc. I can help you make a storm damage claim. Would you like to file a claim now?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "metadata": {
+        "_customization": {
+          "mcr": false
+        }
+      },
+      "conditions": "welcome",
+      "dialog_node": "Welcome"
+    }
+  ],
+  "counterexamples": [],
+  "system_settings": {
+    "off_topic": {
+      "enabled": true
+    },
+    "disambiguation": {
+      "prompt": "Did you mean:",
+      "enabled": true,
+      "randomize": true,
+      "max_suggestions": 5,
+      "suggestion_text_policy": "title",
+      "none_of_the_above_prompt": "None of the above"
+    },
+    "system_entities": {
+      "enabled": true
+    },
+    "human_agent_assist": {
+      "prompt": "Did you mean:"
+    },
+    "spelling_auto_correct": true
+  },
+  "learning_opt_out": false,
+  "name": "Stormy Insurance",
+  "language": "en",
+  "description": ""
+}

@@ -1,0 +1,132 @@
+---
+swagger: "2.0"
+info:
+  x-ibm-name: "chatbot"
+  title: "chatbot"
+  version: "1.0.0"
+schemes:
+- "https"
+host: "$(catalog.host)"
+basePath: "/chatbot"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+securityDefinitions:
+  clientIdHeader:
+    type: "apiKey"
+    in: "header"
+    name: "X-IBM-Client-Id"
+security:
+- clientIdHeader: []
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+    - gatewayscript:
+        title: "gatewayscript"
+        version: "1.0.0"
+        source: "const body = apim.getvariable('request.body');\nconst apiName = apim.getvariable('request.body.apiName');\n\
+          apim.setvariable('apiName',apiName,'set');\n\n\n\n\n\n           "
+    - redact:
+        title: "redact"
+        actions:
+        - action: "remove"
+          from:
+          - "request"
+          path: "//*[@name='apiName']"
+        version: "1.0.0"
+    - switch:
+        title: "switch"
+        case:
+        - condition: "$(apiName) === 'classifyImages'"
+          execute:
+          - set-variable:
+              title: "set-variable"
+              actions:
+              - set: "message.headers.x-ibm-client-id"
+                value: "$(classifyImages-key)"
+              version: "1.0.0"
+          - invoke:
+              target-url: "$(classifyImages-endpoint)"
+              verb: "POST"
+        - condition: "$(apiName) === 'stormpath'"
+          execute:
+          - set-variable:
+              title: "set-variable"
+              actions:
+              - set: "message.headers.x-ibm-client-id"
+                value: "$(stormpath-key)"
+              version: "1.0.0"
+          - invoke:
+              target-url: "$(stormpath-endpoint)"
+              verb: "POST"
+        - condition: "$(apiName) === 'summary'"
+          execute:
+          - set-variable:
+              title: "set-variable"
+              actions:
+              - set: "message.headers.x-ibm-client-id"
+                value: "$(summary-key)"
+              version: "1.0.0"
+          - invoke:
+              target-url: "$(summary-endpoint)/$(request.body.incidentId)"
+              verb: "GET"
+        version: "1.0.0"
+  phase: "realized"
+  properties:
+    summary-endpoint:
+      value: "https://XXXX/summary"
+      description: ""
+      encoded: false
+    summary-key:
+      value: "XXXX"
+      description: ""
+      encoded: false
+    stormpath-endpoint:
+      value: "https://XXXX/stormpath"
+      description: ""
+      encoded: false
+    stormpath-key:
+      value: "XXXX"
+      description: ""
+      encoded: false
+    classifyImages-key:
+      value: "XXXX"
+      description: ""
+      encoded: false
+    classifyImages-endpoint:
+      value: "https://XXXX/classify"
+      description: ""
+      encoded: false
+  catalogs:
+    apic-dev:
+      properties:
+        classifyImages-endpoint: "https://XXX/classify"
+        classifyImages-key: "XXXX"
+paths:
+  /webhook:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+    post:
+      responses:
+        200:
+          description: "200 OK"
+      parameters:
+      - name: "reqIn"
+        required: false
+        in: "body"
+        schema:
+          type: "object"
+tags: []
+definitions:
+  account:
+    properties:
+      balance:
+        type: "string"
+    additionalProperties: false
