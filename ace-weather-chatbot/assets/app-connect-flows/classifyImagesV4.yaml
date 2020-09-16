@@ -28,35 +28,35 @@ integration:
       type: api-action
       business-object: Image
       connector-type: watsonvr
-      account-name: Account 2
+      account-name: 'App Connect Trial'
       actions:
         CLASSIFYIMAGES: {}
     action-interface-1:
       type: api-action
       business-object: sys_attachment
       connector-type: servicenow
-      account-name: Mithun-S-Now
+      account-name: 'App Connect Trial'
       actions:
         CREATE: {}
     action-interface-6:
       type: api-action
       business-object: Image
       connector-type: watsonvr
-      account-name: Account 2
+      account-name: 'App Connect Trial'
       actions:
         CLASSIFYIMAGES: {}
     action-interface-3:
       type: api-action
       business-object: incident
       connector-type: servicenow
-      account-name: Mithun-S-Now
+      account-name: 'App Connect Trial'
       actions:
         UPDATEALL: {}
     action-interface-4:
       type: api-action
       business-object: incident
       connector-type: servicenow
-      account-name: Mithun-S-Now
+      account-name: 'App Connect Trial'
       actions:
         RETRIEVEALL: {}
   assemblies:

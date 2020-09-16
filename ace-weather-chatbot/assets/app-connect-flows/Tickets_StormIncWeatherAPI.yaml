@@ -24,21 +24,21 @@ integration:
       type: api-action
       business-object: HistoricalObservations
       connector-type: ibmtwc
-      account-name: Account 2
+      account-name: 'App Connect Trial'
       actions:
         RETRIEVEALL: {}
     action-interface-2:
       type: api-action
       business-object: incident
       connector-type: servicenow
-      account-name: Account 3
+      account-name: 'App Connect Trial'
       actions:
         CREATE: {}
     action-interface-4:
       type: api-action
       business-object: incident
       connector-type: servicenow
-      account-name: Account 3
+      account-name: 'App Connect Trial'
       actions:
         RETRIEVEALL: {}
   assemblies:

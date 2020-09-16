@@ -24,7 +24,7 @@ integration:
       type: api-action
       business-object: incident
       connector-type: servicenow
-      account-name: Mithun-S-Now
+      account-name: 'App Connect Trial'
       actions:
         RETRIEVEALL: {}
   assemblies:
