@@ -11,7 +11,7 @@ produces:
 consumes:
   - application/json
 security:
-  - {}
+  - clientIdHeader: []
 securityDefinitions:
   clientIdHeader:
     type: apiKey
