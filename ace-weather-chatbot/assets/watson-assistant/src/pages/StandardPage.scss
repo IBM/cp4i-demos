@@ -1,0 +1,12 @@
+@import "../styles/carbon-settings";
+@import "../styles/carbon";
+
+.app-scope {
+  .standard-page {
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 0 5px $text-01;
+    width: 600px;
+    margin: 50px;
+  }
+}

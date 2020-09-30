@@ -1,0 +1,118 @@
+@import "../styles/carbon-settings";
+
+.app-scope {
+  .assistant {
+    @include carbon--type-style("body-short-01");
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+    &:not(.assistant--mobile) {
+      padding: $layout-02;
+      min-height: 400px;
+    }
+  }
+
+  .assistant__heading {
+    @include carbon--type-style("productive-heading-03");
+    flex: 0 0;
+    padding: $spacing-04;
+  }
+
+  .assistant__conversation {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 100%;
+    padding: $spacing-04;
+    background-color: $ui-01;
+    overflow-y: auto;
+  }
+
+  .assistant__message {
+    display: inline-block;
+    margin: $spacing-04 0;
+    padding: 0 $spacing-04;
+    border-left: 3px solid transparent;
+  }
+
+  .assistant__message--output.assistant__message--last {
+    border-left: 3px solid $interactive-01;
+  }
+
+  .assistant__message--input {
+    text-align: right;
+
+    .assistant__message-content {
+      display: inline-block;
+      position: relative;
+      border-radius: $spacing-03;
+      padding: $spacing-04 $spacing-04;
+      background-color: $inverse-02;
+      color: $inverse-01;
+
+      &::after {
+        position: absolute;
+        content: "";
+        right: 0;
+        bottom: -$spacing-03;
+        width: 0;
+        height: 0;
+        border-top: $spacing-05 solid $inverse-02;
+        border-left: $spacing-04 solid transparent;
+      }
+    }
+  }
+
+  .assistant__message-image {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .assistant__message-caption {
+    display: block;
+    text-align: left;
+  }
+
+  .assistant__conversation--dots {
+    margin-left: $spacing-02;
+  }
+
+  .assistant__conversation--dot {
+    display: inline-block;
+    height: $spacing-03;
+    width: $spacing-03;
+    margin: $spacing-01;
+    border-radius: 50%;
+    background-color: $interactive-01;
+    opacity: 0;
+
+    animation: $duration--slow-02 alternate infinite pending;
+
+    &:first-child {
+      animation-delay: -1 * $duration--slow-02 / 2;
+    }
+
+    &:last-child {
+      animation-delay: $duration--slow-02 / 2;
+    }
+  }
+
+  @keyframes pending {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .example-enter {
+    opacity: 0.01;
+  }
+
+  .example-enter.example-enter-active {
+    opacity: 1;
+    transition: opacity $duration--fast-02 ease-in;
+  }
+}
