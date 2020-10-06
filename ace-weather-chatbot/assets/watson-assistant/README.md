@@ -36,16 +36,6 @@ The credentials for these are stored in the `.env.local` file, which you will ne
 * For your App Connect Image Processing flow
   * The URL for your image processing API: `REACT_APP_IMAGE_PROCESS_URL`
   * The API Key for accessing your image processing API: `REACT_APP_IMAGE_PROCESS_API_KEY`
-  * To get these;
-    1. From the App Connect dashboard, click on the tile for the image classification flow (likely called something like `classifyImagesV3`)
-    2. Select the `Manage` tab
-    3. Scroll to the bottom of this page to the 'Sharing outside of the Cloud Foundry Organisation'
-    4. Select 'Create API Key and Documentation Link': give your key a name, and click 'Create'
-       * You will see an 'API Key' and 'API Documentation Link'
-       * The 'API Key' is the value to use as `REACT_APP_IMAGE_PROCESS_API_KEY`
-    5. Follow the documentation link
-       * From the 'Overview' copy the `Endpoint` URL
-       * This is used as your `REACT_APP_IMAGE_PROCESS_URL`
 
 ```.env.local
 REACT_APP_ASSISTANT_URL="https://..."
