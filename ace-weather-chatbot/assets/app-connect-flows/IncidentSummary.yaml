@@ -1,0 +1,206 @@
+$integration: 'http://ibm.com/appconnect/integration/v2/integrationFile'
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        retrieveSummary:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: summary
+          output-context:
+            data: summary
+      options:
+        resources:
+          - business-object: summary
+            model:
+              $ref: '#/models/summary'
+            triggers:
+              retrieve: retrieveSummary
+      type: api-trigger
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: incident
+      connector-type: servicenow
+      account-name: 'App Connect Trial'
+      actions:
+        RETRIEVEALL: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - retrieve-action:
+              name: ServiceNow Retrieve incidents
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              filter:
+                where:
+                  number: '{{$api.incidentNumber}}'
+                input:
+                  - variable: api
+                    $ref: '#/trigger/api/parameters'
+                limit: 10
+              allow-truncation: false
+              pagination-type: SKIP_LIMIT
+              allow-empty-output: false
+          - parse:
+              name: JSON Parser Parse
+              parse-format: json
+              source:
+                template: '{{$ServiceNowRetrieveincidents.description}}'
+                input:
+                  - variable: api
+                    $ref: '#/trigger/api/parameters'
+                  - variable: ServiceNowRetrieveincidents
+                    $ref: >-
+                      #/node-output/ServiceNow Retrieve
+                      incidents/response/payload
+                  - variable: ServiceNowRetrieveincidentsMetadata
+                    $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+              sample-data: |-
+                {"claimDate":"2019-07-13",
+                "claimLocation":"70510:US",
+                "customerName":"Yubli Jugbi",
+                "stormPath":true,
+                "topClass":{"class":"deep-freeze","score":0.968,"value":1000},
+                "userInput":"",
+                "windSpeed":"20.4"}
+              output-schema:
+                $schema: 'http://json-schema.org/draft-04/schema#'
+                type: object
+                properties:
+                  claimDate:
+                    type: string
+                  claimLocation:
+                    type: string
+                  customerName:
+                    type: string
+                  stormPath:
+                    type: boolean
+                  topClass:
+                    type: object
+                    properties:
+                      class:
+                        type: string
+                      score:
+                        type: number
+                      value:
+                        type: number
+                  userInput:
+                    type: string
+                  windSpeed:
+                    type: string
+                title: Parsed JSON
+          - response:
+              name: response-1
+              reply-maps:
+                - title: summary successfully retrieved
+                  status-code: '200'
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: api
+                        $ref: '#/trigger/api/parameters'
+                      - variable: ServiceNowRetrieveincidents
+                        $ref: >-
+                          #/node-output/ServiceNow Retrieve
+                          incidents/response/payload
+                      - variable: ServiceNowRetrieveincidentsMetadata
+                        $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                      - variable: JSONParserParse
+                        $ref: '#/node-output/JSON Parser Parse/response/payload'
+                    mappings:
+                      - incidentNumber:
+                          template: '{{$api.incidentNumber}}'
+                      - summary:
+                          mappings:
+                            - claimDate:
+                                template: '{{$JSONParserParse.claimDate}}'
+                            - claimLocation:
+                                template: '{{$JSONParserParse.claimLocation}}'
+                            - customerName:
+                                template: '{{$JSONParserParse.customerName}}'
+                            - stormPath:
+                                template: '{{$JSONParserParse.stormPath}}'
+                            - topClass:
+                                mappings:
+                                  - class:
+                                      template: '{{$JSONParserParse.topClass.class}}'
+                                  - score:
+                                      expression: '$JSONParserParse.topClass.score '
+                                  - value:
+                                      expression: '$JSONParserParse.topClass.value '
+                            - userInput:
+                                template: '{{$JSONParserParse.userInput}}'
+                            - windSpeed:
+                                template: '{{$JSONParserParse.windSpeed}}'
+                  input:
+                    - variable: api
+                      $ref: '#/trigger/api/parameters'
+                    - variable: ServiceNowRetrieveincidents
+                      $ref: >-
+                        #/node-output/ServiceNow Retrieve
+                        incidents/response/payload
+                    - variable: ServiceNowRetrieveincidentsMetadata
+                      $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                    - variable: JSONParserParse
+                      $ref: '#/node-output/JSON Parser Parse/response/payload'
+  name: IncidentSummary
+models:
+  summary:
+    name: summary
+    properties:
+      incidentNumber:
+        required: false
+        id: true
+        type: string
+      summary:
+        required: false
+        id: false
+        type:
+          claimDate:
+            required: false
+            id: false
+            type: string
+          claimLocation:
+            required: false
+            id: false
+            type: string
+          customerName:
+            required: false
+            id: false
+            type: string
+          stormPath:
+            required: false
+            id: false
+            type: string
+          topClass:
+            required: false
+            id: false
+            type:
+              class:
+                required: false
+                id: false
+                type: string
+              score:
+                required: false
+                id: false
+                type: number
+              value:
+                required: false
+                id: false
+                type: number
+          userInput:
+            required: false
+            id: false
+            type: string
+          windSpeed:
+            required: false
+            id: false
+            type: string
+    plural: summary
+    description: ' '
+    operations:
+      retrieve: '#/integration/assemblies/assembly-1'

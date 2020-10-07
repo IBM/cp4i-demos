@@ -1,0 +1,695 @@
+$integration: 'http://ibm.com/appconnect/integration/v2/integrationFile'
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        classifyImages:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-1'
+          input-context:
+            data: images
+          output-context:
+            data: classification
+      options:
+        resources:
+          - business-object: images
+            model:
+              $ref: '#/models/images'
+            triggers:
+              classify: classifyImages
+          - business-object: classification
+            model:
+              $ref: '#/models/classification'
+            triggers: {}
+      type: api-trigger
+  action-interfaces:
+    action-interface-2:
+      type: api-action
+      business-object: Image
+      connector-type: watsonvr
+      account-name: 'App Connect Trial'
+      actions:
+        CLASSIFYIMAGES: {}
+    action-interface-1:
+      type: api-action
+      business-object: sys_attachment
+      connector-type: servicenow
+      account-name: 'App Connect Trial'
+      actions:
+        CREATE: {}
+    action-interface-6:
+      type: api-action
+      business-object: Image
+      connector-type: watsonvr
+      account-name: 'App Connect Trial'
+      actions:
+        CLASSIFYIMAGES: {}
+    action-interface-3:
+      type: api-action
+      business-object: incident
+      connector-type: servicenow
+      account-name: 'App Connect Trial'
+      actions:
+        UPDATEALL: {}
+    action-interface-4:
+      type: api-action
+      business-object: incident
+      connector-type: servicenow
+      account-name: 'App Connect Trial'
+      actions:
+        RETRIEVEALL: {}
+  assemblies:
+    assembly-1:
+      assembly:
+        execute:
+          - retrieve-action:
+              name: ServiceNow Retrieve incidents
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-4'
+              filter:
+                where:
+                  number: '{{$Request.incident_id}}'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                limit: 1
+              allow-truncation: false
+              pagination-type: SKIP_LIMIT
+              allow-empty-output: false
+          - if:
+              name: If
+              input:
+                - variable: Request
+                  $ref: '#/trigger/payload'
+              branch:
+                - condition:
+                    '{{$Request.image}}':
+                      neq: ''
+                  execute:
+                    - create-action:
+                        name: ServiceNow Create attachment
+                        target:
+                          $ref: '#/integration/action-interfaces/action-interface-1'
+                        map:
+                          mappings:
+                            - AttachmentOwnerId:
+                                template: '{{$ServiceNowRetrieveincidents.sys_id}}'
+                            - AttachmentOwnerType:
+                                template: incident
+                            - FileContent:
+                                template: '{{$Request.image}}'
+                            - file_name:
+                                template: '{{$Request.image_name}}'
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: ServiceNowRetrieveincidents
+                              $ref: >-
+                                #/node-output/ServiceNow Retrieve
+                                incidents/response/payload
+                            - variable: ServiceNowRetrieveincidentsMetadata
+                              $ref: >-
+                                #/node-output/ServiceNow Retrieve
+                                incidents/response
+                    - custom-action:
+                        name: IBM Watson Visual Recognition Classify images
+                        target:
+                          $ref: '#/integration/action-interfaces/action-interface-2'
+                        action: CLASSIFYIMAGES
+                        map:
+                          mappings:
+                            - classifier_id:
+                                template: default
+                            - images_file:
+                                template: '{{$Request.image}}'
+                            - threshold:
+                                template: '0.0'
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: ServiceNowCreateattachment
+                              $ref: >-
+                                #/block/If/node-output/ServiceNow Create
+                                attachment/response/payload
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: ServiceNowCreateattachment
+                        $ref: >-
+                          #/block/If/node-output/ServiceNow Create
+                          attachment/response/payload
+                      - variable: IBMWatsonVisualRecognitionClassifyimages
+                        $ref: >-
+                          #/block/If/node-output/IBM Watson Visual Recognition
+                          Classify images/response/payload
+                    mappings:
+                      - attachment_id:
+                          template: '{{$ServiceNowCreateattachment.sys_id}}'
+                      - classes:
+                          template: >-
+                            {{$IBMWatsonVisualRecognitionClassifyimages.classify_images.classifiers.classes}}
+                - condition:
+                    '{{$Request.image_url}}':
+                      neq: ''
+                  execute:
+                    - custom-action:
+                        name: IBM Watson Visual Recognition Classify images 2
+                        target:
+                          $ref: '#/integration/action-interfaces/action-interface-6'
+                        action: CLASSIFYIMAGES
+                        map:
+                          mappings:
+                            - classifier_id:
+                                template: default
+                            - threshold:
+                                template: '0.0'
+                            - url:
+                                template: '{{$Request.image_url}}'
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: IBMWatsonVisualRecognitionClassifyimages2
+                        $ref: >-
+                          #/block/If/node-output/IBM Watson Visual Recognition
+                          Classify images 2/response/payload
+                    mappings:
+                      - attachment_id:
+                          template: '"Attachment not created for public URL"'
+                      - classes:
+                          template: >-
+                            {{$IBMWatsonVisualRecognitionClassifyimages2.classify_images.classifiers.classes}}
+              else:
+                execute: []
+                completion-action:
+                  terminate:
+                    error:
+                      input:
+                        - variable: Request
+                          $ref: '#/trigger/payload'
+                      message: One of 'image' or 'image_url' must be set
+                      status-code: 400
+              output-schema:
+                required:
+                  - classes
+                properties:
+                  classes:
+                    type: string
+                    title: classes
+                  attachment_id:
+                    type: string
+                    title: attachment_id
+                title: Output Schema
+                type: object
+          - logging:
+              name: Log 3
+              map:
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                mappings:
+                  - customMessages:
+                      mappings:
+                        - classesObj:
+                            expression: $eval($If.classes)
+                  - logLevel:
+                      template: Info
+                  - logMessage:
+                      template: '{{$If.classes}}'
+                customSchemas:
+                  properties.`customMessages`:
+                    type: object
+                    properties:
+                      classesObj:
+                        type: object
+                        properties: {}
+          - parse:
+              name: JSON Parser Parse
+              parse-format: json
+              source:
+                template: |
+                  {"refrigeration system": 1000,
+                  "refrigerator": 1000,
+                  "deep-freeze": 1000,
+                  "photographic equipment": 1500,
+                  "appliance": 300,
+                  "coupe car": 20000,
+                  "vehicle": 10000}
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: ServiceNowRetrieveincidents
+                    $ref: >-
+                      #/node-output/ServiceNow Retrieve
+                      incidents/response/payload
+                  - variable: ServiceNowRetrieveincidentsMetadata
+                    $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+              sample-data: |-
+                {"refrigeration system": 1000,
+                "photographic equipment": 1500,
+                "appliance": 300}
+              output-schema:
+                $schema: 'http://json-schema.org/draft-04/schema#'
+                type: object
+                properties:
+                  refrigeration system:
+                    type: number
+                  photographic equipment:
+                    type: number
+                  appliance:
+                    type: number
+                title: Parsed JSON
+          - set-variable:
+              name: Set variable
+              map:
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: ServiceNowRetrieveincidents
+                    $ref: >-
+                      #/node-output/ServiceNow Retrieve
+                      incidents/response/payload
+                  - variable: ServiceNowRetrieveincidentsMetadata
+                    $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      classes:
+                        type: array
+                        items:
+                          type: object
+                          properties: {}
+                mappings:
+                  - variable:
+                      mappings:
+                        - classes:
+                            expression: >-
+                              $filter($map($eval($If.classes)  ,function($o){
+                              {"class": $o.class,"score": $o.score,"value":
+                              $lookup($JSONParserParse , $o.class)}} ) ,
+                              function($v){"value" in $keys($v)}) 
+          - parse:
+              name: JSON Parser Parse 2
+              parse-format: json
+              source:
+                template: '{{$ServiceNowRetrieveincidents.description}}'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: ServiceNowRetrieveincidents
+                    $ref: >-
+                      #/node-output/ServiceNow Retrieve
+                      incidents/response/payload
+                  - variable: ServiceNowRetrieveincidentsMetadata
+                    $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+              sample-data: >-
+                {"claimDate":"2019-07-13","claimLocation":"70510:US","customerName":"Yubli
+                Jugbi","stormPath":true,"userInput":"","windSpeed":"20.4"}
+              output-schema:
+                $schema: 'http://json-schema.org/draft-04/schema#'
+                type: object
+                properties:
+                  claimDate:
+                    type: string
+                  claimLocation:
+                    type: string
+                  customerName:
+                    type: string
+                  stormPath:
+                    type: boolean
+                  userInput:
+                    type: string
+                  windSpeed:
+                    type: string
+                title: Parsed JSON
+          - set-variable:
+              name: Set variable 2
+              map:
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: ServiceNowRetrieveincidents
+                    $ref: >-
+                      #/node-output/ServiceNow Retrieve
+                      incidents/response/payload
+                  - variable: ServiceNowRetrieveincidentsMetadata
+                    $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                customSchemas:
+                  properties.`variable`:
+                    type: object
+                    properties:
+                      claimDate:
+                        type: string
+                      claimLocation:
+                        type: string
+                      customerName:
+                        type: string
+                      stormPath:
+                        type: boolean
+                      userInput:
+                        type: string
+                      windSpeed:
+                        type: string
+                      topClass:
+                        type: object
+                        properties: {}
+                mappings:
+                  - variable:
+                      mappings:
+                        - claimDate:
+                            template: '{{$JSONParserParse2.claimDate}}'
+                        - claimLocation:
+                            template: '{{$JSONParserParse2.claimLocation}}'
+                        - customerName:
+                            template: '{{$JSONParserParse2.customerName}}'
+                        - stormPath:
+                            expression: '$JSONParserParse2.stormPath '
+                        - topClass:
+                            expression: >-
+                              $sort($Setvariable.variable.classes, function($l,
+                              $r){$l.value < $r.value})[0]
+                        - userInput:
+                            template: '{{$JSONParserParse2.userInput}}'
+                        - windSpeed:
+                            template: '{{$JSONParserParse2.windSpeed}}'
+          - update-action:
+              name: ServiceNow Update an incident
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-3'
+              map:
+                mappings:
+                  - activity_due:
+                      template: '{{$ServiceNowRetrieveincidents.activity_due}}'
+                  - additional_assignee_list:
+                      template: >-
+                        {{$ServiceNowRetrieveincidents.additional_assignee_list}}
+                  - approval:
+                      template: '{{$ServiceNowRetrieveincidents.approval}}'
+                  - approval_history:
+                      template: '{{$ServiceNowRetrieveincidents.approval_history}}'
+                  - approval_set:
+                      template: '{{$ServiceNowRetrieveincidents.approval_set}}'
+                  - assigned_to:
+                      template: '{{$ServiceNowRetrieveincidents.assigned_to}}'
+                  - assignment_group:
+                      template: '{{$ServiceNowRetrieveincidents.assignment_group}}'
+                  - business_duration:
+                      template: '{{$ServiceNowRetrieveincidents.business_duration}}'
+                  - business_service:
+                      template: '{{$ServiceNowRetrieveincidents.business_service}}'
+                  - calendar_duration:
+                      template: '{{$ServiceNowRetrieveincidents.calendar_duration}}'
+                  - caller_id:
+                      template: '{{$ServiceNowRetrieveincidents.caller_id}}'
+                  - category:
+                      template: '{{$ServiceNowRetrieveincidents.category}}'
+                  - caused_by:
+                      template: '{{$ServiceNowRetrieveincidents.caused_by}}'
+                  - close_code:
+                      template: '{{$ServiceNowRetrieveincidents.close_code}}'
+                  - close_notes:
+                      template: '{{$ServiceNowRetrieveincidents.close_notes}}'
+                  - closed_at:
+                      template: '{{$ServiceNowRetrieveincidents.closed_at}}'
+                  - closed_by:
+                      template: '{{$ServiceNowRetrieveincidents.closed_by}}'
+                  - cmdb_ci:
+                      template: '{{$ServiceNowRetrieveincidents.cmdb_ci}}'
+                  - comments:
+                      template: '{{$ServiceNowRetrieveincidents.comments}}'
+                  - comments_and_work_notes:
+                      template: '{{$ServiceNowRetrieveincidents.comments_and_work_notes}}'
+                  - company:
+                      template: '{{$ServiceNowRetrieveincidents.company}}'
+                  - contact_type:
+                      template: '{{$ServiceNowRetrieveincidents.contact_type}}'
+                  - correlation_display:
+                      template: '{{$ServiceNowRetrieveincidents.correlation_display}}'
+                  - correlation_id:
+                      template: '{{$ServiceNowRetrieveincidents.correlation_id}}'
+                  - delivery_plan:
+                      template: '{{$ServiceNowRetrieveincidents.delivery_plan}}'
+                  - delivery_task:
+                      template: '{{$ServiceNowRetrieveincidents.delivery_task}}'
+                  - description:
+                      template: '{{ $string($Setvariable2.variable )}}'
+                  - due_date:
+                      template: '{{$ServiceNowRetrieveincidents.due_date}}'
+                  - expected_start:
+                      template: '{{$ServiceNowRetrieveincidents.expected_start}}'
+                  - follow_up:
+                      template: '{{$ServiceNowRetrieveincidents.follow_up}}'
+                  - group_list:
+                      template: '{{$ServiceNowRetrieveincidents.group_list}}'
+                  - location:
+                      template: '{{$ServiceNowRetrieveincidents.location}}'
+                  - number:
+                      template: '{{$ServiceNowRetrieveincidents.number}}'
+                  - opened_at:
+                      template: '{{$ServiceNowRetrieveincidents.opened_at}}'
+                  - opened_by:
+                      template: '{{$ServiceNowRetrieveincidents.opened_by}}'
+                  - parent:
+                      template: '{{$ServiceNowRetrieveincidents.parent}}'
+                  - parent_incident:
+                      template: '{{$ServiceNowRetrieveincidents.parent_incident}}'
+                  - problem_id:
+                      template: '{{$ServiceNowRetrieveincidents.problem_id}}'
+                  - reopened_by:
+                      template: '{{$ServiceNowRetrieveincidents.reopened_by}}'
+                  - reopened_time:
+                      template: '{{$ServiceNowRetrieveincidents.reopened_time}}'
+                  - resolved_at:
+                      template: '{{$ServiceNowRetrieveincidents.resolved_at}}'
+                  - resolved_by:
+                      template: '{{$ServiceNowRetrieveincidents.resolved_by}}'
+                  - rfc:
+                      template: '{{$ServiceNowRetrieveincidents.rfc}}'
+                  - short_description:
+                      template: '{{$ServiceNowRetrieveincidents.short_description}}'
+                  - sla_due:
+                      template: '{{$ServiceNowRetrieveincidents.sla_due}}'
+                  - subcategory:
+                      template: '{{$ServiceNowRetrieveincidents.subcategory}}'
+                  - sys_created_by:
+                      template: '{{$ServiceNowRetrieveincidents.sys_created_by}}'
+                  - sys_domain:
+                      template: '{{$ServiceNowRetrieveincidents.sys_domain}}'
+                  - sys_domain_path:
+                      template: '{{$ServiceNowRetrieveincidents.sys_domain_path}}'
+                  - sys_tags:
+                      template: '{{$ServiceNowRetrieveincidents.sys_tags}}'
+                  - sys_updated_by:
+                      template: '{{$ServiceNowRetrieveincidents.sys_updated_by}}'
+                  - time_worked:
+                      template: '{{$ServiceNowRetrieveincidents.time_worked}}'
+                  - upon_approval:
+                      template: '{{$ServiceNowRetrieveincidents.upon_approval}}'
+                  - upon_reject:
+                      template: '{{$ServiceNowRetrieveincidents.upon_reject}}'
+                  - watch_list:
+                      template: '{{$ServiceNowRetrieveincidents.watch_list}}'
+                  - work_end:
+                      template: '{{$ServiceNowRetrieveincidents.work_end}}'
+                  - work_notes_list:
+                      template: '{{$ServiceNowRetrieveincidents.work_notes_list}}'
+                  - work_start:
+                      template: '{{$ServiceNowRetrieveincidents.work_start}}'
+                $map: 'http://ibm.com/appconnect/map/v1'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: ServiceNowRetrieveincidents
+                    $ref: >-
+                      #/node-output/ServiceNow Retrieve
+                      incidents/response/payload
+                  - variable: ServiceNowRetrieveincidentsMetadata
+                    $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+              filter:
+                where:
+                  sys_id: '{{$ServiceNowRetrieveincidents.sys_id}}'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                  - variable: ServiceNowRetrieveincidents
+                    $ref: >-
+                      #/node-output/ServiceNow Retrieve
+                      incidents/response/payload
+                  - variable: ServiceNowRetrieveincidentsMetadata
+                    $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                  - variable: If
+                    $ref: '#/node-output/If/response/payload'
+                  - variable: JSONParserParse
+                    $ref: '#/node-output/JSON Parser Parse/response/payload'
+                  - variable: Setvariable
+                    $ref: '#/node-output/Set variable/response/payload'
+                  - variable: JSONParserParse2
+                    $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                  - variable: Setvariable2
+                    $ref: '#/node-output/Set variable 2/response/payload'
+              allow-empty-output: false
+          - response:
+              name: response-1
+              reply-maps:
+                - title: images successfully add custom operation
+                  status-code: '200'
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: ServiceNowRetrieveincidents
+                        $ref: >-
+                          #/node-output/ServiceNow Retrieve
+                          incidents/response/payload
+                      - variable: ServiceNowRetrieveincidentsMetadata
+                        $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                      - variable: If
+                        $ref: '#/node-output/If/response/payload'
+                      - variable: JSONParserParse
+                        $ref: '#/node-output/JSON Parser Parse/response/payload'
+                      - variable: Setvariable
+                        $ref: '#/node-output/Set variable/response/payload'
+                      - variable: JSONParserParse2
+                        $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                      - variable: Setvariable2
+                        $ref: '#/node-output/Set variable 2/response/payload'
+                      - variable: ServiceNowUpdateanincident
+                        $ref: >-
+                          #/node-output/ServiceNow Update an
+                          incident/response/payload
+                      - variable: ServiceNowUpdateanincidentMetadata
+                        $ref: '#/node-output/ServiceNow Update an incident/response'
+                    mappings:
+                      - attachment_id:
+                          template: '{{$If.attachment_id}}'
+                      - most_valuable_class:
+                          expression: '$Setvariable2.variable.topClass '
+                  input:
+                    - variable: Request
+                      $ref: '#/trigger/payload'
+                    - variable: ServiceNowRetrieveincidents
+                      $ref: >-
+                        #/node-output/ServiceNow Retrieve
+                        incidents/response/payload
+                    - variable: ServiceNowRetrieveincidentsMetadata
+                      $ref: '#/node-output/ServiceNow Retrieve incidents/response'
+                    - variable: If
+                      $ref: '#/node-output/If/response/payload'
+                    - variable: JSONParserParse
+                      $ref: '#/node-output/JSON Parser Parse/response/payload'
+                    - variable: Setvariable
+                      $ref: '#/node-output/Set variable/response/payload'
+                    - variable: JSONParserParse2
+                      $ref: '#/node-output/JSON Parser Parse 2/response/payload'
+                    - variable: Setvariable2
+                      $ref: '#/node-output/Set variable 2/response/payload'
+                    - variable: ServiceNowUpdateanincident
+                      $ref: >-
+                        #/node-output/ServiceNow Update an
+                        incident/response/payload
+                    - variable: ServiceNowUpdateanincidentMetadata
+                      $ref: '#/node-output/ServiceNow Update an incident/response'
+  name: classifyImagesV4
+models:
+  images:
+    name: images
+    properties:
+      image:
+        required: false
+        id: false
+        type: string
+      incident_id:
+        required: false
+        id: true
+        type: string
+      image_name:
+        required: false
+        id: false
+        type: string
+      image_url:
+        required: false
+        id: false
+        type: string
+    plural: images
+    description: ' '
+    operations:
+      classify: '#/integration/assemblies/assembly-1'
+    methods:
+      classify:
+        name: classify
+        display:
+          name: classify
+        accessType: WRITE
+        accepts:
+          - arg: data
+            type: images
+            http:
+              source: body
+        returns:
+          arg: data
+          type: classification
+          root: true
+        http:
+          verb: POST
+          path: /classify
+  classification:
+    name: classification
+    properties:
+      attachment_id:
+        required: false
+        id: true
+        type: string
+      most_valuable_class:
+        required: false
+        id: false
+        type: {}
+    plural: classification
+    description: ' '
+    operations: {}

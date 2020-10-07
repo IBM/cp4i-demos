@@ -1,0 +1,86 @@
+@import "../styles/carbon-settings";
+
+.app-scope {
+  .multi-input {
+    display: flex;
+    position: relative;
+    background-color: $ui-01;
+
+    &.multi-input--mobile {
+      margin: 0;
+      border-top: 1px solid $interactive-01;
+    }
+
+    &:not(.multi-input--mobile) {
+      margin: $layout-04 0 $layout-02;
+      border-bottom: 1px solid $ui-04;
+    }
+  }
+
+  .multi-input__file-container {
+    position: relative;
+  }
+
+  .multi-input__file {
+    border-color: transparent;
+  }
+
+  .multi-input__file-container,
+  .multi-input__clear,
+  .multi-input__submit {
+    flex: 0 0;
+  }
+
+  .multi-input__message {
+    position: relative;
+    flex: 1 1 100%;
+  }
+
+  .multi-input__message-label {
+    position: absolute;
+    top: -#{$spacing-01};
+    left: -$spacing-09;
+    transform: translateY(-100%);
+  }
+
+  .bx--btn.bx--btn--icon-only.multi-input__clear {
+    position: absolute !important;
+    top: 0;
+    right: 0;
+    transition: outline, background-color 0.11s ease-in-out;
+    border: $spacing-01;
+    outline-offset: -$spacing-01;
+    outline: $spacing-01 solid transparent;
+
+    &:focus {
+      outline: $spacing-01 solid var(--cds-focus, #0f62fe);
+    }
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .multi-input__message-input:focus ~ .multi-input__clear {
+    outline: $spacing-01 solid var(--cds-focus, #0f62fe);
+
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      top: $spacing-01;
+      height: calc(100% - #{$spacing-02});
+      width: $spacing-01;
+      background-color: $ui-background;
+    }
+  }
+
+  .multi-input__message-input {
+    width: 100%;
+    height: 100%;
+    border: 1px solid transparent;
+    padding-right: $spacing-09;
+    z-index: 99;
+  }
+}

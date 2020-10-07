@@ -1,0 +1,68 @@
+[
+  {
+    "output": {
+      "generic": [
+        {
+          "response_type": "text",
+          "text": "test: Welcome to the Watson Assistant."
+        }
+      ]
+    }
+  },
+  { "input": { "text": "Hello" } },
+  {
+    "output": {
+      "intents": [{ "intent": "General_Greetings", "confidence": 1 }],
+      "entities": [],
+      "generic": [{ "response_type": "text", "text": "test: Good day to you!" }]
+    }
+  },
+  { "input": { "text": "Oh hi" } },
+  {
+    "output": {
+      "intents": [{ "intent": "General_Greetings", "confidence": 1 }],
+      "entities": [],
+      "generic": [{ "response_type": "text", "text": "test: Howdy" }]
+    }
+  },
+  { "input": { "text": "Bye" } },
+  {
+    "output": {
+      "intents": [
+        { "intent": "General_Ending", "confidence": 0.9574056148529053 }
+      ],
+      "entities": [],
+      "generic": [{ "response_type": "text", "text": "test: See ya." }]
+    }
+  },
+  { "input": { "text": "Thanks" } },
+  {
+    "output": {
+      "intents": [
+        {
+          "intent": "General_Positive_Feedback",
+          "confidence": 0.806965732574463
+        }
+      ],
+      "entities": [],
+      "generic": [
+        {
+          "title": "You're welcome",
+          "source": "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSzETeoiWdScog9aqJEWCB3gHwa3hkRU-PDpnAthoH8aXmKj20Q&usqp=CAU",
+          "response_type": "image",
+          "description": "test: An image giving thumbs up"
+        }
+      ]
+    }
+  },
+  { "input": { "text": "Adios." } },
+  {
+    "output": {
+      "intents": [
+        { "intent": "General_Ending", "confidence": 0.9574056148529053 }
+      ],
+      "entities": [],
+      "generic": [{ "response_type": "text", "text": "test: Bye." }]
+    }
+  }
+]

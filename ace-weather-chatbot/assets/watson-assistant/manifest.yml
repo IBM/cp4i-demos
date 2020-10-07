@@ -1,0 +1,5 @@
+---
+applications:
+  - buildpack: https://github.com/cloudfoundry/staticfile-buildpack.git
+    name: my-watson-assistant-lee-chase
+    memory: 64M

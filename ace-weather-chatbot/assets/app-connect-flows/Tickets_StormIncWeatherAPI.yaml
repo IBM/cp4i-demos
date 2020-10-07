@@ -1,0 +1,481 @@
+$integration: 'http://ibm.com/appconnect/integration/v2/integrationFile'
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        stormpathStormData:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-2'
+          input-context:
+            data: StormData
+          output-context:
+            data: StormData
+      options:
+        resources:
+          - business-object: StormData
+            model:
+              $ref: '#/models/StormData'
+            triggers:
+              stormpath: stormpathStormData
+      type: api-trigger
+  action-interfaces:
+    action-interface-1:
+      type: api-action
+      business-object: HistoricalObservations
+      connector-type: ibmtwc
+      account-name: 'App Connect Trial'
+      actions:
+        RETRIEVEALL: {}
+    action-interface-2:
+      type: api-action
+      business-object: incident
+      connector-type: servicenow
+      account-name: 'App Connect Trial'
+      actions:
+        CREATE: {}
+    action-interface-4:
+      type: api-action
+      business-object: incident
+      connector-type: servicenow
+      account-name: 'App Connect Trial'
+      actions:
+        RETRIEVEALL: {}
+  assemblies:
+    assembly-2:
+      assembly:
+        execute:
+          - retrieve-action:
+              name: >-
+                IBM Weather Company Data Limited Edition Retrieve historical
+                observations
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              filter:
+                where:
+                  and:
+                    - endDate: '{{$Request.date}}'
+                    - language: en-US
+                    - startDate: '{{$Request.date}}'
+                    - units: s
+                    - postalKey: '{{$Request.postCode}}'
+                input:
+                  - variable: Request
+                    $ref: '#/trigger/payload'
+                limit: 1
+              allow-truncation: false
+              pagination-type: TOKEN
+              allow-empty-output: true
+          - if:
+              name: If
+              input:
+                - variable: Request
+                  $ref: '#/trigger/payload'
+                - variable: >-
+                    IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                  $ref: >-
+                    #/node-output/IBM Weather Company Data Limited Edition
+                    Retrieve historical observations/response/payload
+                - variable: >-
+                    IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                  $ref: >-
+                    #/node-output/IBM Weather Company Data Limited Edition
+                    Retrieve historical observations/response
+              branch:
+                - condition:
+                    and:
+                      - '{{$IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations[0].WindSpeedLocalDayMax}}':
+                          gte: '20'
+                      - '{{$IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations.PrecipAmountLocalOvernightMax}}':
+                          gte: '10'
+                  execute:
+                    - set-variable:
+                        name: Set variable
+                        map:
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: >-
+                                IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                              $ref: >-
+                                #/node-output/IBM Weather Company Data Limited
+                                Edition Retrieve historical
+                                observations/response/payload
+                            - variable: >-
+                                IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                              $ref: >-
+                                #/node-output/IBM Weather Company Data Limited
+                                Edition Retrieve historical
+                                observations/response
+                          customSchemas:
+                            properties.`variable`:
+                              type: object
+                              properties:
+                                stormy:
+                                  type: boolean
+                          mappings:
+                            - variable:
+                                mappings:
+                                  - stormy:
+                                      expression: 'true'
+                    - set-variable:
+                        name: Set variable 3
+                        map:
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: Setvariable
+                              $ref: >-
+                                #/block/If/node-output/Set
+                                variable/response/payload
+                            - variable: >-
+                                IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                              $ref: >-
+                                #/node-output/IBM Weather Company Data Limited
+                                Edition Retrieve historical
+                                observations/response/payload
+                            - variable: >-
+                                IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                              $ref: >-
+                                #/node-output/IBM Weather Company Data Limited
+                                Edition Retrieve historical
+                                observations/response
+                          customSchemas:
+                            properties.`variable`:
+                              type: object
+                              properties:
+                                customerName:
+                                  type: string
+                                claimDate:
+                                  type: string
+                                claimLocation:
+                                  type: string
+                                stormPath:
+                                  type: boolean
+                                windSpeed:
+                                  type: string
+                                userInput:
+                                  type: array
+                                  items:
+                                    type: string
+                          mappings:
+                            - variable:
+                                mappings:
+                                  - claimDate:
+                                      template: '{{$Request.date}}'
+                                  - claimLocation:
+                                      template: '{{$Request.postCode}}'
+                                  - customerName:
+                                      template: '{{$Request.name}}'
+                                  - stormPath:
+                                      expression: $Setvariable.variable.stormy
+                                  - userInput:
+                                      expression: '$Request.customerResponseMsg '
+                                  - windSpeed:
+                                      template: >-
+                                        {{$IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations[0].WindSpeedLocalDayMax}}
+                    - create-action:
+                        name: ServiceNow Create incident
+                        target:
+                          $ref: '#/integration/action-interfaces/action-interface-2'
+                        map:
+                          mappings:
+                            - approval:
+                                template: Claim Valid
+                            - caller_id:
+                                template: 3De77ed22fdb111010499a27374896198c
+                            - description:
+                                template: '{{$Setvariable3.variable}}'
+                            - incident_state:
+                                expression: '2'
+                            - location:
+                                template: '{{$Request.postCode}}'
+                            - short_description:
+                                template: >-
+                                  Storm Claim by {{$Request.name}}, for an
+                                  incident on {{$Request.date}} at
+                                  {{$Request.postCode}}
+                          $map: 'http://ibm.com/appconnect/map/v1'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: Setvariable
+                              $ref: >-
+                                #/block/If/node-output/Set
+                                variable/response/payload
+                            - variable: Setvariable3
+                              $ref: >-
+                                #/block/If/node-output/Set variable
+                                3/response/payload
+                            - variable: >-
+                                IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                              $ref: >-
+                                #/node-output/IBM Weather Company Data Limited
+                                Edition Retrieve historical
+                                observations/response/payload
+                            - variable: >-
+                                IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                              $ref: >-
+                                #/node-output/IBM Weather Company Data Limited
+                                Edition Retrieve historical
+                                observations/response
+                    - retrieve-action:
+                        name: ServiceNow Retrieve incidents
+                        target:
+                          $ref: '#/integration/action-interfaces/action-interface-4'
+                        filter:
+                          where:
+                            sys_id: '{{$ServiceNowCreateincident.sys_id}}'
+                          input:
+                            - variable: Request
+                              $ref: '#/trigger/payload'
+                            - variable: Setvariable
+                              $ref: >-
+                                #/block/If/node-output/Set
+                                variable/response/payload
+                            - variable: Setvariable3
+                              $ref: >-
+                                #/block/If/node-output/Set variable
+                                3/response/payload
+                            - variable: ServiceNowCreateincident
+                              $ref: >-
+                                #/block/If/node-output/ServiceNow Create
+                                incident/response/payload
+                            - variable: >-
+                                IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                              $ref: >-
+                                #/node-output/IBM Weather Company Data Limited
+                                Edition Retrieve historical
+                                observations/response/payload
+                            - variable: >-
+                                IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                              $ref: >-
+                                #/node-output/IBM Weather Company Data Limited
+                                Edition Retrieve historical
+                                observations/response
+                          limit: 10
+                        allow-truncation: false
+                        pagination-type: SKIP_LIMIT
+                        allow-empty-output: false
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: Setvariable
+                        $ref: '#/block/If/node-output/Set variable/response/payload'
+                      - variable: Setvariable3
+                        $ref: '#/block/If/node-output/Set variable 3/response/payload'
+                      - variable: ServiceNowCreateincident
+                        $ref: >-
+                          #/block/If/node-output/ServiceNow Create
+                          incident/response/payload
+                      - variable: ServiceNowRetrieveincidents
+                        $ref: >-
+                          #/block/If/node-output/ServiceNow Retrieve
+                          incidents/response/payload
+                      - variable: ServiceNowRetrieveincidentsMetadata
+                        $ref: >-
+                          #/block/If/node-output/ServiceNow Retrieve
+                          incidents/response
+                      - variable: >-
+                          IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                        $ref: >-
+                          #/node-output/IBM Weather Company Data Limited Edition
+                          Retrieve historical observations/response/payload
+                      - variable: >-
+                          IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                        $ref: >-
+                          #/node-output/IBM Weather Company Data Limited Edition
+                          Retrieve historical observations/response
+                    mappings:
+                      - responseToCustomer:
+                          template: >-
+                            We are sorry to hear that the wind exceeded
+                            {{$IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations[0].WindSpeedLocalDayMax}}
+                            MPH, this is assessed as a storm, please proceed
+                            with your claim
+                      - serviceNowIncident:
+                          template: '{{$ServiceNowRetrieveincidents[0].number}}'
+                      - stormy_if:
+                          template: '{{$Setvariable.variable.stormy}}'
+              else:
+                execute:
+                  - set-variable:
+                      name: Set variable 2
+                      map:
+                        $map: 'http://ibm.com/appconnect/map/v1'
+                        input:
+                          - variable: Request
+                            $ref: '#/trigger/payload'
+                          - variable: >-
+                              IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                            $ref: >-
+                              #/node-output/IBM Weather Company Data Limited
+                              Edition Retrieve historical
+                              observations/response/payload
+                          - variable: >-
+                              IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                            $ref: >-
+                              #/node-output/IBM Weather Company Data Limited
+                              Edition Retrieve historical observations/response
+                        customSchemas:
+                          properties.`variable`:
+                            type: object
+                            properties:
+                              stormy:
+                                type: boolean
+                        mappings:
+                          - variable:
+                              mappings:
+                                - stormy:
+                                    expression: 'false'
+                map:
+                  $map: 'http://ibm.com/appconnect/map/v1'
+                  input:
+                    - variable: Request
+                      $ref: '#/trigger/payload'
+                    - variable: Setvariable2
+                      $ref: '#/block/If/node-output/Set variable 2/response/payload'
+                    - variable: >-
+                        IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                      $ref: >-
+                        #/node-output/IBM Weather Company Data Limited Edition
+                        Retrieve historical observations/response/payload
+                    - variable: >-
+                        IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                      $ref: >-
+                        #/node-output/IBM Weather Company Data Limited Edition
+                        Retrieve historical observations/response
+                  mappings:
+                    - responseToCustomer:
+                        template: >-
+                          "According to our records the weather on that day had
+                          light wind, less than
+                          {{$IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations[0].WindSpeedLocalDayMax}}
+                          MPH" If you want to proceed with your claim, please
+                          phone 555 0134 to discuss this with one of our claim
+                          consultants
+                    - serviceNowIncident:
+                        template: No claim incident created
+                    - stormy_if:
+                        template: '{{$Setvariable2.variable.stormy}}'
+              output-schema:
+                required:
+                  - stormy_if
+                  - serviceNowIncident
+                  - responseToCustomer
+                properties:
+                  stormy_if:
+                    type: string
+                    title: stormy_if
+                  serviceNowIncident:
+                    type: string
+                    title: serviceNowIncident
+                  responseToCustomer:
+                    type: string
+                    title: responseToCustomer
+                title: Output Schema
+                type: object
+          - response:
+              name: response-1
+              reply-maps:
+                - title: StormData successfully add custom operation
+                  status-code: '200'
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: Request
+                        $ref: '#/trigger/payload'
+                      - variable: >-
+                          IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                        $ref: >-
+                          #/node-output/IBM Weather Company Data Limited Edition
+                          Retrieve historical observations/response/payload
+                      - variable: >-
+                          IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                        $ref: >-
+                          #/node-output/IBM Weather Company Data Limited Edition
+                          Retrieve historical observations/response
+                      - variable: If
+                        $ref: '#/node-output/If/response/payload'
+                    mappings:
+                      - claimNumber:
+                          template: '{{$If.serviceNowIncident}}'
+                      - customerResponseMsg:
+                          template: '{{$If.responseToCustomer}}'
+                      - date:
+                          template: '{{$Request.date}}'
+                      - name:
+                          template: '{{$Request.name}}'
+                      - stormPath:
+                          expression: '$If.stormy_if="true" ? true : false '
+                  input:
+                    - variable: Request
+                      $ref: '#/trigger/payload'
+                    - variable: >-
+                        IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservations
+                      $ref: >-
+                        #/node-output/IBM Weather Company Data Limited Edition
+                        Retrieve historical observations/response/payload
+                    - variable: >-
+                        IBMWeatherCompanyDataLimitedEditionRetrievehistoricalobservationsMetadata
+                      $ref: >-
+                        #/node-output/IBM Weather Company Data Limited Edition
+                        Retrieve historical observations/response
+                    - variable: If
+                      $ref: '#/node-output/If/response/payload'
+  name: Tickets_StormIncWeatherAPI
+models:
+  StormData:
+    name: StormData
+    properties:
+      postCode:
+        required: false
+        id: true
+        type: string
+      date:
+        required: false
+        id: false
+        type: date
+      stormPath:
+        required: false
+        id: false
+        type: boolean
+      name:
+        required: false
+        id: false
+        type: string
+      claimNumber:
+        required: false
+        id: false
+        type: string
+      customerResponseMsg:
+        required: false
+        id: false
+        type: string
+    plural: StormData
+    description: ' '
+    operations:
+      stormpath: '#/integration/assemblies/assembly-2'
+    interactions: {}
+    methods:
+      stormpath:
+        name: stormpath
+        display:
+          name: stormData
+        accessType: WRITE
+        accepts:
+          - arg: data
+            type: StormData
+            http:
+              source: body
+        returns:
+          arg: data
+          type: StormData
+          root: true
+        http:
+          verb: POST
+          path: /stormpath
