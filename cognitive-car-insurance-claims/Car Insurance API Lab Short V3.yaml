@@ -265,7 +265,7 @@ integration:
                       $ref: >-
                         #/node-output/Salesforce Create case
                         comment/response/payload
-  name: Car Insurance API Lab Short V2
+  name: Car Insurance API Lab Short V3
 models:
   CarRepairClaim:
     name: CarRepairClaim
